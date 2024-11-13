@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce\\backend\\backend.csproj": {}
+    "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce App\\ecommerce-web-app\\backend\\backend.csproj": {}
   },
   "projects": {
-    "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce\\backend\\backend.csproj": {
+    "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce App\\ecommerce-web-app\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce App\\ecommerce-web-app\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce\\backend\\backend.csproj",
+        "projectPath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce App\\ecommerce-web-app\\backend\\backend.csproj",
         "packagesPath": "C:\\Users\\umars\\.nuget\\packages\\",
-        "outputPath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce\\backend\\obj\\",
+        "outputPath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce App\\ecommerce-web-app\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\umars\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -46,6 +46,18 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AWSSDK.S3": {
+              "target": "Package",
+              "version": "[4.0.0-preview, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.26.2, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.10, )"
