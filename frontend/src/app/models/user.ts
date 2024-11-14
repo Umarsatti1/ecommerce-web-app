@@ -5,4 +5,6 @@ export interface User {
     token: string;
     cart?: Cart;
     roles?: string[];
+    firstName?: string;  // Add firstName
+    lastName?: string;   // Add lastName
 }

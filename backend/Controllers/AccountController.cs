@@ -43,6 +43,8 @@ namespace backend.Controllers
             return new UserDto
             {
                 Email = user.Email,
+                FirstName = user.FirstName,  // Add this
+                LastName = user.LastName,    // Add this
                 Token = await _tokenService.GenerateToken(user),
                 Cart = userCart?.MapCartToDto()
             };
@@ -81,6 +83,8 @@ namespace backend.Controllers
             return new UserDto
             {
                 Email = user.Email,
+                FirstName = user.FirstName,  // Add this
+                LastName = user.LastName,    // Add this
                 Token = await _tokenService.GenerateToken(user),
                 Cart = userCart?.MapCartToDto()
             };
@@ -102,6 +106,37 @@ namespace backend.Controllers
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
                 .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
+        }
+
+        [Authorize]
+        [HttpPut("update-profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UserProfileUpdateDto profileDto)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null) return Unauthorized();
+
+            // Update FirstName and LastName
+            user.FirstName = profileDto.FirstName;
+            user.LastName = profileDto.LastName;
+
+            // Handle Password Change
+            if (!string.IsNullOrEmpty(profileDto.Password) && !string.IsNullOrEmpty(profileDto.NewPassword))
+            {
+                var result = await _userManager.ChangePasswordAsync(user, profileDto.Password, profileDto.NewPassword);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+
+            // Save changes to FirstName and LastName
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                return BadRequest(updateResult.Errors);
+            }
+
+            return Ok("Profile updated successfully");
         }
     }
 }

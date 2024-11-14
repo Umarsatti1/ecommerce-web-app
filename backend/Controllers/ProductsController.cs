@@ -62,6 +62,7 @@ namespace backend.Controllers
             return Ok(new {brands, types});
         }
 
+        //Admin Roles
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct([FromForm]CreateProductDto productDto)
