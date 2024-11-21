@@ -398,7 +398,10 @@ namespace backend.Data.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
                     b.Property<string>("State")
@@ -501,7 +504,10 @@ namespace backend.Data.Migrations
                             b1.Property<string>("Country")
                                 .HasColumnType("longtext");
 
-                            b1.Property<string>("FullName")
+                            b1.Property<string>("FirstName")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("LastName")
                                 .HasColumnType("longtext");
 
                             b1.Property<string>("State")

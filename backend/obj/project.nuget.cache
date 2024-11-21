@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YtkYetcoF9w=",
+  "dgSpecHash": "2EpvOv35tvc=",
   "success": true,
-  "projectFilePath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\E-Commerce App\\ecommerce-web-app\\backend\\backend.csproj",
+  "projectFilePath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umars\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

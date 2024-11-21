@@ -90,7 +90,8 @@ namespace backend.Controllers
 
                 var address = new UserAddress
                 {
-                    FullName = orderDto.ShippingAddress.FullName,
+                    FirstName = orderDto.ShippingAddress.FirstName,
+                    LastName = orderDto.ShippingAddress.LastName,
                     Address1 = orderDto.ShippingAddress.Address1,
                     Address2 = orderDto.ShippingAddress.Address2,
                     City = orderDto.ShippingAddress.City,

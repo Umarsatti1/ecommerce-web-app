@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import { Container, CssBaseline } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useCallback, useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import LoadingComponent from "./LoadingComponent";
 import { useAppDispatch } from "../store/configureStore";
 import { fetchCartAsync } from "../../features/cart/cartSlice";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
+import Footer from "./Footer";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -33,11 +34,16 @@ function App() {
       <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       <CssBaseline />
       <Header />
-      <Container>
-        <Outlet />
-      </Container>      
+      <div className="flex flex-col min-h-screen">
+        {/* Main Content */}
+        <div className="flex-grow">
+          <Outlet />
+        </div>
+        {/* Footer */}
+        <Footer />
+      </div>
     </>
   );
 }
 
-export default App
+export default App;

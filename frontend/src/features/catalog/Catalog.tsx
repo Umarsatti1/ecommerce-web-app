@@ -1,13 +1,13 @@
-import { Grid, Paper } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { setPageNumber, setProductParams } from "./catalogSlice";
 import ProductList from "./ProductList";
 import ProductSearch from "./ProductSearch";
-import RadioButtonGroup from "../../app/components/RadioButtonGroup";
-import CheckboxButtons from "../../app/components/CheckboxButtons";
 import AppPagination from "../../app/components/AppPagination";
 import useProducts from "../../app/hooks/useProducts";
+import CheckboxDropdown from "../../app/components/CheckboxButtons";
+import SortDropdown from "../../app/components/RadioButtonGroup";
 
 const sortOptions = [
   {value: 'name', label: 'Alphabetical'},
@@ -23,34 +23,37 @@ export default function Catalog() {
   if (!filtersLoaded) return <LoadingComponent message='Loading products...'/>
 
     return (
+      <Container>
         <Grid container columnSpacing={4}>
           <Grid item xs={3}>
-            <Paper sx={{mb: 2}}>
               <ProductSearch />
-            </Paper>
-            <Paper sx={{mb: 2, p: 2}}>
-              <RadioButtonGroup 
-                selectedValue={productParams.orderBy}
+            <div className="flex justify-end mb-4">
+              <SortDropdown 
                 options={sortOptions}
-                onChange={(e) => dispatch(setProductParams({orderBy: e.target.value}))}
+                selectedValue={productParams.orderBy}
+                onChange={(value) => dispatch(setProductParams({orderBy: value}))}
               />
-            </Paper>
+            </div>
 
-            <Paper sx={{mb: 2, p: 2}}>
-              <CheckboxButtons 
-                items={brands}
-                checked={productParams.brands}
-                onChange={(items: string[]) => dispatch(setProductParams({ brands: items }))}
-              />
-            </Paper>
-
-            <Paper sx={{mb: 2, p: 2}}>
-              <CheckboxButtons 
-                items={types}
-                checked={productParams.types}
-                onChange={(items: string[]) => dispatch(setProductParams({ types: items }))}
-              />
-            </Paper>
+            
+              <div className="mb-6">
+                <CheckboxDropdown 
+                  title="BRANDS"
+                  items={brands}
+                  checked={productParams.brands}
+                  onChange={(items: string[]) => dispatch(setProductParams({ brands: items }))}
+                />
+              </div>
+         
+              <div className="mb-6">
+                <CheckboxDropdown
+                  title="TYPE"
+                  items={types}
+                  checked={productParams.types}
+                  onChange={(items: string[]) => dispatch(setProductParams({ types: items }))}
+                />
+              </div>
+            
 
           </Grid>
           <Grid item xs={9}>
@@ -65,5 +68,6 @@ export default function Catalog() {
             />}
           </Grid>
         </Grid>
+        </Container>
     )
 }

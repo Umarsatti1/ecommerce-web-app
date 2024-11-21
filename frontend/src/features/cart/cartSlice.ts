@@ -67,7 +67,7 @@ export const cartSlice = createSlice ({
             state.status = 'pendingAddItem' + action.meta.arg.productId;
         });
         builder.addCase(removeCartItemAsync.pending, (state, action) => {
-            state.status = 'pendingRemoveItem' + action.meta.arg.productId + action.meta.arg.name;
+            state.status = 'pendingRemoveItem' + action.meta.arg.productId + 'rem';
         });
         builder.addCase(removeCartItemAsync.fulfilled, (state, action) => {
             const {productId, quantity} = action.meta.arg;

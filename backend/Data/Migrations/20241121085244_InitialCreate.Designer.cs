@@ -12,8 +12,8 @@ using backend.Data;
 namespace backend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241106104631_PaymentIntentAdded")]
-    partial class PaymentIntentAdded
+    [Migration("20241121085244_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -254,6 +254,9 @@ namespace backend.Data.Migrations
                     b.Property<long>("Price")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("PublicId")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("int");
 
@@ -330,6 +333,12 @@ namespace backend.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -392,7 +401,10 @@ namespace backend.Data.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
                     b.Property<string>("State")
@@ -495,7 +507,10 @@ namespace backend.Data.Migrations
                             b1.Property<string>("Country")
                                 .HasColumnType("longtext");
 
-                            b1.Property<string>("FullName")
+                            b1.Property<string>("FirstName")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("LastName")
                                 .HasColumnType("longtext");
 
                             b1.Property<string>("State")
