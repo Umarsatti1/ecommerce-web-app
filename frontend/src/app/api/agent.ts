@@ -85,7 +85,8 @@ const Admin = {
 const Catalog = {
     list: (params: URLSearchParams) => requests.get('products', params),
     details: (id: number) => requests.get(`products/${id}`),
-    fetchFilters: () => requests.get('products/filters')
+    fetchFilters: () => requests.get('products/filters'),
+    fetchByBrand: (brand: string) => requests.get(`products/brand/${brand}`) //Added fetch by brand
 };
 
 const TestErrors = {

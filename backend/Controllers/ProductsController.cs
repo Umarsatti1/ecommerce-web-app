@@ -62,6 +62,23 @@ namespace backend.Controllers
             return Ok(new {brands, types});
         }
 
+        // New endpoint to get products by brand
+        [HttpGet("brand/{brandName}")]
+        public async Task<ActionResult<List<Product>>> GetProductsByBrand(string brandName)
+        {
+            // Query to filter products by brand
+            var products = await _context.Products
+                .Where(p => p.Brand.ToLower() == brandName.ToLower())
+                .ToListAsync();
+
+            if (!products.Any())
+            {
+                return NotFound(new { message = $"No products found for the brand '{brandName}'." });
+            }
+
+            return Ok(products);
+        }
+
         //Admin Roles
         [Authorize(Roles = "Admin")]
         [HttpPost]

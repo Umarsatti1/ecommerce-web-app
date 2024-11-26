@@ -17,6 +17,7 @@ import Orders from "../../features/orders/Orders";
 import CheckoutWrapper from "../../features/checkout/CheckoutWrapper";
 import Inventory from "../../features/admin/Inventory";
 import ProfileSettings from "../../features/account/ProfileSettings";
+import BrandProductsPage from "../../features/catalog/BrandsProductPage";
 
 export const router = createBrowserRouter([
     {
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
             {path: '', element: <HomePage />},
             {path: 'catalog', element: <Catalog />},
             {path: 'catalog/:id', element: <ProductDetails />},
+            {path: 'products/brand/:brand', element: <BrandProductsPage />}, //BrandProductsPage
             {path: 'about', element: <AboutPage />},
             {path: 'contact', element: <ContactPage />},
             {path: 'categoryone', element: <CategoryPageOne />},

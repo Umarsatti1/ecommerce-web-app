@@ -1,4 +1,4 @@
-import { Typography, Button, Grid, Box } from "@mui/material";
+import { Typography, Button, Grid, Box, Container } from "@mui/material";
 import { CartItem } from "../../app/models/cart";
 import { Order } from "../../app/models/order";
 import CartSummary from "../cart/CartSummary";
@@ -12,7 +12,7 @@ interface Props {
 export default function OrderDetailed({ order, setSelectedOrder }: Props) {
     const subtotal = order.orderItems.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0;
     return (
-        <>
+        <Container>
             <Box display='flex' justifyContent='space-between'>
                 <Typography sx={{ p: 2 }} gutterBottom variant='h4'>Order# {order.id} - {order.orderStatus}</Typography>
                 <Button onClick={() => setSelectedOrder(0)} sx={{ m: 2.5 }} size='large' variant='contained'>Back to Orders</Button>
@@ -24,6 +24,6 @@ export default function OrderDetailed({ order, setSelectedOrder }: Props) {
                     <CartSummary subtotal={subtotal} />
                 </Grid>
             </Grid>
-        </>
+        </Container>
     )
 }

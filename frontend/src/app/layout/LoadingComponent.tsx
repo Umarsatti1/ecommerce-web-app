@@ -1,18 +1,18 @@
-import { Backdrop, Box, CircularProgress, Typography } from "@mui/material";
-
 interface Props {
     message?: string;
-}
-
-export default function LoadingComponent({message = 'Loading...'}: Props) {
+  }
+  
+  export default function LoadingComponent({ message = "Loading..." }: Props) {
     return (
-        <Backdrop open={true} invisible={true}>
-            <Box display='flex' justifyContent='center' alignItems='center' height='100vh'>
-                <CircularProgress size={100} color='secondary' />
-                <Typography variant='h4' sx={{justifyContent: 'center', position: 'fixed', top: '60%'}}>
-                    {message}
-                </Typography>              
-            </Box>
-        </Backdrop>
-    )
-}
+      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 z-50">
+        <div className="flex flex-col items-center">
+          {/* Spinner */}
+          <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-blue-500 border-solid"></div>
+  
+          {/* Loading Message */}
+          <p className="mt-4 pb-40 text-xl font-medium text-blue-500">{message}</p>
+        </div>
+      </div>
+    );
+  }
+  

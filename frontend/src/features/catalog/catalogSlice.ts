@@ -63,6 +63,18 @@ export const fetchProductAsync = createAsyncThunk<Product, number>(
     }
 )
 
+//Fetch Products by Brand Name
+export const fetchProductsByBrandAsync = createAsyncThunk<Product[], string>(
+    'catalog/fetchProductsByBrandAsync',
+    async (brand, thunkAPI) => {
+        try {
+            return await agent.Catalog.fetchByBrand(brand);
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue({ error: error.data });
+        }
+    }
+);
+
 function initParams() {
     return {
         pageNumber: 1,
@@ -144,7 +156,21 @@ export const catalogSlice = createSlice({
         builder.addCase(fetchFilters.rejected, (state, action) => {
             state.status = 'idle';
             console.log(action.payload);
-        })
+        });
+        
+        //Fetch products by brand name
+        builder.addCase(fetchProductsByBrandAsync.pending, (state) => {
+            state.status = 'pendingFetchProductsByBrand';
+        });
+        builder.addCase(fetchProductsByBrandAsync.fulfilled, (state, action) => {
+            productsAdapter.setAll(state, action.payload);
+            state.status = 'idle';
+            state.productsLoaded = true;
+        });
+        builder.addCase(fetchProductsByBrandAsync.rejected, (state, action) => {
+            console.log(action.payload);
+            state.status = 'idle';
+        });
     })
 })
 

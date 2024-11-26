@@ -1,9 +1,12 @@
-import { ShoppingCart } from 'lucide-react'
-import * as NavigationMenu from '@radix-ui/react-navigation-menu'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { useAppSelector } from "../store/configureStore"
-import SignedInMenu from "./SignedInMenu"
-import { Link, useLocation } from 'react-router-dom';
+import { ShoppingCart } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from "../store/configureStore";
+import SignedInMenu from "./SignedInMenu";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import agent from '../api/agent';
+import { resetProductParams, fetchProductsAsync } from '../../features/catalog/catalogSlice';
+import LoadingComponent from './LoadingComponent';
+
 
 const midLinks = [
   { title: 'Home', path: '/' },
@@ -11,27 +14,40 @@ const midLinks = [
   { title: 'About Us', path: '/about' },
   { title: 'Blog', path: '/blog' },
   { title: 'Contact', path: '/contact' },
-]
-
-const shopCategories = [
-  { title: 'Category One', path: '/category-one' },
-  { title: 'Category Two', path: '/category-two' },
-  { title: 'Category Three', path: '/category-three' },
-  { title: 'Category Four', path: '/category-four' },
-  { title: 'Category Five', path: '/category-five' },
-]
-
-const rightLinks = [
-  { title: 'Login', path: '/login' },
-  { title: 'Register', path: '/register' },
-]
+];
 
 export default function Header() {
-  const location = useLocation()
-  const pathname = location.pathname
-  const { cart } = useAppSelector(state => state.cart)
-  const { user } = useAppSelector(state => state.account)
-  const itemCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0
+  const location = useLocation();
+  const pathname = location.pathname;
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { cart } = useAppSelector((state) => state.cart);
+  const { user } = useAppSelector((state) => state.account);
+  const itemCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const [brands, setBrands] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchBrands() {
+      try {
+        const filters = await agent.Catalog.fetchFilters();
+        setBrands(filters.brands);
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      }
+    }
+    fetchBrands();
+  }, []);
+
+  const handleShopClick = async () => {
+    setLoading(true);
+    dispatch(resetProductParams());
+    await dispatch(fetchProductsAsync());
+    navigate('/catalog');
+    setLoading(false);
+  };
+
+  if (loading) return <LoadingComponent message="Loading catalog..." />;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
@@ -42,55 +58,46 @@ export default function Header() {
         </Link>
 
         {/* Navigation Links */}
-        <NavigationMenu.Root className="relative z-[1] flex">
-          <NavigationMenu.List className="flex flex-row space-x-4">
-            {midLinks.map(({ title, path, hasDropdown }) => (
-              <NavigationMenu.Item key={path}>
-                {hasDropdown ? (
-                  <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild>
-                      <Link
-                        to={path}
-                        className={`group inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-base font-medium text-black hover:bg-gray-100 focus:outline-none relative ${
-                          pathname === path || pathname === '/catalog' ? 'after:absolute after:bottom-0 after:left-1/4 after:right-1/4 after:h-0.5 after:bg-[#C40C0C]' : ''
-                        } hover:after:absolute hover:after:bottom-0 hover:after:left-1/4 hover:after:right-1/4 hover:after:h-0.5 hover:after:bg-[#C40C0C]`}
-                      >
-                        {title}
-                      </Link>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Portal>
-                      <DropdownMenu.Content
-                        className="min-w-[220px] rounded-md bg-white p-2 shadow-md"
-                        sideOffset={5}
-                        align="start"
-                      >
-                        {shopCategories.map(({ title, path }) => (
-                          <DropdownMenu.Item key={path} asChild>
-                            <Link
-                              to={path}
-                              className="block rounded-md px-4 py-2 text-sm text-black hover:bg-gray-100 focus:outline-none"
-                            >
-                              {title}
-                            </Link>
-                          </DropdownMenu.Item>
-                        ))}
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Portal>
-                  </DropdownMenu.Root>
-                ) : (
-                  <Link
-                    to={path}
-                    className={`group inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-base font-medium text-black hover:bg-gray-100 focus:outline-none relative ${
-                      pathname === path ? 'after:absolute after:bottom-0 after:left-1/4 after:right-1/4 after:h-0.5 after:bg-[#C40C0C]' : ''
-                    } hover:after:absolute hover:after:bottom-0 hover:after:left-1/4 hover:after:right-1/4 hover:after:h-0.5 hover:after:bg-[#C40C0C]`}
+        <nav className="flex items-center space-x-6">
+          {midLinks.map(({ title, path, hasDropdown }) => (
+            <div key={path} className="relative group">
+              {hasDropdown ? (
+                <>
+                  <span
+                    onClick={handleShopClick}
+                    className={`inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-base font-medium text-black hover:bg-gray-100 focus:outline-none cursor-pointer ${
+                      pathname.startsWith('/catalog') ? 'after:absolute after:bottom-0 after:left-1/4 after:right-1/4 after:h-0.5 after:bg-[#C40C0C]' : ''
+                    }`}
                   >
                     {title}
-                  </Link>
-                )}
-              </NavigationMenu.Item>
-            ))}
-          </NavigationMenu.List>
-        </NavigationMenu.Root>
+                  </span>
+                  <div className="absolute left-0 mt-2 hidden group-hover:block pointer-events-auto z-50 bg-white rounded-md shadow-lg w-64">
+                    <div className="py-2">
+                      {brands.map((brand) => (
+                        <Link
+                          key={brand}
+                          to={`/products/brand/${brand}`}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          {brand}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <Link
+                  to={path}
+                  className={`inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-base font-medium text-black hover:bg-gray-100 focus:outline-none ${
+                    pathname === path ? 'after:absolute after:bottom-0 after:left-1/4 after:right-1/4 after:h-0.5 after:bg-[#C40C0C]' : ''
+                  }`}
+                >
+                  {title}
+                </Link>
+              )}
+            </div>
+          ))}
+        </nav>
 
         {/* Right Side Icons/Buttons */}
         <div className="flex items-center space-x-4">
@@ -107,23 +114,22 @@ export default function Header() {
             <SignedInMenu />
           ) : (
             <div className="flex items-center space-x-2">
-              {rightLinks.map(({ title, path }) => (
-                <Link
-                  key={path}
-                  to={path}
-                  className={`rounded-md px-4 py-2 text-sm font-medium ${
-                    title === 'Register'
-                      ? 'bg-black text-white hover:bg-gray-800'
-                      : 'bg-white text-black border border-gray-300 hover:bg-gray-100'
-                  }`}
-                >
-                  {title}
-                </Link>
-              ))}
+              <Link
+                to="/login"
+                className="rounded-md px-4 py-2 text-sm font-medium bg-white text-black border border-gray-300 hover:bg-gray-100"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="rounded-md px-4 py-2 text-sm font-medium bg-black text-white hover:bg-gray-800"
+              >
+                Register
+              </Link>
             </div>
           )}
         </div>
       </div>
     </header>
-  )
+  );
 }
