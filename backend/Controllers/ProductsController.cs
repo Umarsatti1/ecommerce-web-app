@@ -103,7 +103,7 @@ namespace backend.Controllers
 
             if (result) return CreatedAtRoute("GetProduct", new {Id = product.Id}, product);
 
-            return BadRequest(new ProblemDetails {Title = "Unable to create new product"});
+            return BadRequest(new ProblemDetails {Title = "Unable to create the new product"});
         }
 
         [Authorize(Roles = "Admin")]

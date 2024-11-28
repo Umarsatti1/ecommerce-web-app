@@ -102,6 +102,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 // Enable CORS using the defined policy
 app.UseCors("CorsPolicy");
 
@@ -111,6 +114,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapFallbackToController("Index", "Fallback");
 
 // Database migration and initialization
 var scope = app.Services.CreateScope();

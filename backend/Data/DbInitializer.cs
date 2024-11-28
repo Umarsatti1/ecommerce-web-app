@@ -249,6 +249,17 @@ namespace backend.Data
                     Type = "Boots",
                     QuantityInStock = 100
                 },
+                new Product
+                {
+                    Name = "iPhone 15",
+                    Description =
+                        "iPhone 15 Pro Max - 128 GB Storage.",
+                    Price = 120000,
+                    PictureUrl = "/images/products/iphone-15",
+                    Brand = "Apple",
+                    Type = "Mobile",
+                    QuantityInStock = 200
+                },
             };
 
             foreach (var product in products)
