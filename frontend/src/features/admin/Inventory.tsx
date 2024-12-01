@@ -8,8 +8,9 @@ import { removeProduct, setPageNumber } from "../catalog/catalogSlice";
 import ProductForm from "./ProductForm";
 import { useState } from "react";
 import { Product } from "../../app/models/product";
-import agent from "../../app/api/agent";
+
 import { LoadingButton } from "@mui/lab";
+import api from "../../app/api/api";
 
 export default function Inventory() {
     const {products, metaData} = useProducts();
@@ -27,7 +28,7 @@ export default function Inventory() {
     function handleDeleteProduct(id: number) {
         setLoading(true);
         setTarget(id);
-        agent.Admin.deleteProduct(id)
+        api.Admin.deleteProduct(id)
             .then(() => dispatch(removeProduct(id)))
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
@@ -41,7 +42,7 @@ export default function Inventory() {
     if (editMode) return <ProductForm product={selectedProduct} cancelEdit={cancelEdit} />
 
     return (
-        <>
+        <>    
             <Box display='flex' justifyContent='space-between'>
                 <Typography sx={{ p: 2 }} variant='h4'>Inventory</Typography>
                 <Button 

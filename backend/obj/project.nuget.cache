@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "2EpvOv35tvc=",
+  "dgSpecHash": "dwYwyM6Qo/M=",
   "success": true,
   "projectFilePath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\umars\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
-    "C:\\Users\\umars\\.nuget\\packages\\awssdk.core\\4.0.0-preview\\awssdk.core.4.0.0-preview.nupkg.sha512",
-    "C:\\Users\\umars\\.nuget\\packages\\awssdk.s3\\4.0.0-preview\\awssdk.s3.4.0.0-preview.nupkg.sha512",
+    "C:\\Users\\umars\\.nuget\\packages\\awssdk.core\\3.7.300\\awssdk.core.3.7.300.nupkg.sha512",
+    "C:\\Users\\umars\\.nuget\\packages\\awssdk.extensions.netcore.setup\\3.7.301\\awssdk.extensions.netcore.setup.3.7.301.nupkg.sha512",
+    "C:\\Users\\umars\\.nuget\\packages\\awssdk.s3\\3.7.105.1\\awssdk.s3.3.7.105.1.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\cloudinarydotnet\\1.26.2\\cloudinarydotnet.1.26.2.nupkg.sha512",

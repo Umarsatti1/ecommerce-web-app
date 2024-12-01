@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { User } from "../../app/models/user";
 import { FieldValues } from "react-hook-form";
-import agent from "../../app/api/agent";
+import agent from "../../app/api/api";
 import { router } from "../../app/router/Routes";
 import { toast } from "react-toastify";
 import { setCart } from "../cart/cartSlice";

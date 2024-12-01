@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import agent from "../../app/api/agent";
 import { Order } from "../../app/models/order";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import OrderDetailed from "./OrderDetailed";
 import { currencyFormat } from "../../app/util/util";
+import api from "../../app/api/api";
 
 export default function Orders() {
   const [orders, setOrders] = useState<Order[] | null>(null);
@@ -11,7 +11,7 @@ export default function Orders() {
   const [selectedOrderNumber, setSelectedOrderNumber] = useState(0);
 
   useEffect(() => {
-    agent.Orders.list()
+    api.Orders.list()
       .then((orders) => setOrders(orders))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));

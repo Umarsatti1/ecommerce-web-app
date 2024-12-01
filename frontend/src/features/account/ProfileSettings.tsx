@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Alert, Table, TableBody, TableCell, TableRow } from "@mui/material";
-import agent from '../../app/api/agent';
-import { useAppDispatch, useAppSelector } from '../../app/store/configureStore';
-import { fetchCurrentUser, setUser } from '../../features/account/accountSlice';
+import React, { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchCurrentUser, setUser } from "../../features/account/accountSlice";
+import agent from "../../app/api/api";
 
 interface ProfileFormValues {
   firstName: string;
@@ -13,16 +12,16 @@ interface ProfileFormValues {
 
 const ProfileSettings = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector(state => state.account);
+  const { user } = useAppSelector((state) => state.account);
 
-  const [profile, setProfile] = useState<ProfileFormValues>({ 
-    firstName: '', 
-    lastName: '', 
-    Password: '', 
-    newPassword: ''
+  const [profile, setProfile] = useState<ProfileFormValues>({
+    firstName: "",
+    lastName: "",
+    Password: "",
+    newPassword: "",
   });
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -31,10 +30,10 @@ const ProfileSettings = () => {
       }
       if (user) {
         setProfile({
-          firstName: user.firstName || '',
-          lastName: user.lastName || '',
-          Password: '',
-          newPassword: ''
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          Password: "",
+          newPassword: "",
         });
       }
       setLoading(false);
@@ -49,91 +48,93 @@ const ProfileSettings = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!profile.firstName.trim() || !profile.lastName.trim()) {
-      setMessage({ text: "First name and last name cannot be empty.", type: 'error' });
+      setMessage({ text: "First name and last name cannot be empty.", type: "error" });
       return;
     }
 
     try {
       await agent.Account.updateProfile(profile);
-      setMessage({ text: "Profile updated successfully.", type: 'success' });
-      setProfile({ ...profile, Password: '', newPassword: '' });
+      setMessage({ text: "Profile updated successfully.", type: "success" });
+      setProfile({ ...profile, Password: "", newPassword: "" });
       dispatch(setUser({ ...user, firstName: profile.firstName, lastName: profile.lastName }));
     } catch (error) {
-      setMessage({ text: "Error updating profile. Please check your information.", type: 'error' });
+      setMessage({ text: "Error updating profile. Please check your information.", type: "error" });
     }
   };
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>Profile Settings</Typography>
-      
-      {message && (
-        <Alert severity={message.type} onClose={() => setMessage(null)} style={{ marginBottom: '1rem' }}>
-          {message.text}
-        </Alert>
-      )}
-      
-      <Typography variant="h6" gutterBottom>Current Profile Information</Typography>
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableCell><strong>First Name:</strong></TableCell>
-            <TableCell>{user?.firstName || 'N/A'}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><strong>Last Name:</strong></TableCell>
-            <TableCell>{user?.lastName || 'N/A'}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-16">
+      <div className="w-full max-w-2xl bg-white rounded-lg shadow-md p-7">
+        <h1 className="text-3xl font-bold mb-4 text-center">Profile Settings</h1>
 
-      <form onSubmit={handleSubmit} style={{ marginTop: '1rem' }}>
-        <TextField
-          name="firstName"
-          label="First Name"
-          value={profile.firstName}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          name="lastName"
-          label="Last Name"
-          value={profile.lastName}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          required
-        />
-        <TextField
-          name="Password"
-          label="Old Password"
-          type="password"
-          value={profile.Password || ''}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          helperText="Enter your current password to make updates."
-        />
-        <TextField
-          name="newPassword"
-          label="New Password"
-          type="password"
-          value={profile.newPassword || ''}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-          helperText="Leave blank if you do not want to change the password."
-        />
-        <Button type="submit" variant="contained" color="primary">
-          Save Changes
-        </Button>
-      </form>
+        {message && (
+          <div
+            className={`p-4 mb-4 rounded-md ${
+              message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            }`}
+          >
+            {message.text}
+          </div>
+        )}
+
+        <h2 className="text-xl font-semibold mb-4">Current Profile Information</h2>
+        <div className="mb-6">
+          <p>
+            <strong>First Name:</strong> {user?.firstName || "N/A"}
+          </p>
+          <p>
+            <strong>Last Name:</strong> {user?.lastName || "N/A"}
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <input
+            name="firstName"
+            value={profile.firstName}
+            onChange={handleChange}
+            placeholder="First Name"
+            required
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            name="lastName"
+            value={profile.lastName}
+            onChange={handleChange}
+            placeholder="Last Name"
+            required
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            name="Password"
+            value={profile.Password}
+            onChange={handleChange}
+            type="password"
+            placeholder="Old Password"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            name="newPassword"
+            value={profile.newPassword}
+            onChange={handleChange}
+            type="password"
+            placeholder="New Password"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800"
+            >
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

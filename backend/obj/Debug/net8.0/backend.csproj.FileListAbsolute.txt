@@ -352,6 +352,7 @@ C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-ap
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\AutoMapper.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\AWSSDK.Core.dll
+C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\AWSSDK.Extensions.NETCore.Setup.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\AWSSDK.S3.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\Azure.Core.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\Azure.Identity.dll
@@ -517,4 +518,3 @@ C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-ap
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\obj\Debug\net8.0\backend.pdb
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\obj\Debug\net8.0\ref\backend.dll
-C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\backend.staticwebassets.runtime.json

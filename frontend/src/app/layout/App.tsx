@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import { CssBaseline } from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useCallback, useEffect, useState } from "react";
@@ -9,6 +9,12 @@ import { useAppDispatch } from "../store/configureStore";
 import { fetchCartAsync } from "../../features/cart/cartSlice";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
 import Footer from "./Footer";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: "'Open Sans', sans-serif",
+  },
+});
 
 function App() {
   const dispatch = useAppDispatch();
@@ -31,6 +37,7 @@ function App() {
   
   return (
     <>
+    <ThemeProvider theme={theme}>
       <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       <CssBaseline />
       <Header />
@@ -42,6 +49,7 @@ function App() {
         {/* Footer */}
         <Footer />
       </div>
+      </ThemeProvider>
     </>
   );
 }

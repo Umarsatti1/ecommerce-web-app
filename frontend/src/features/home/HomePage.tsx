@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, ArrowRightIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../catalog/ProductCard'
 import { Product } from '../../app/models/product'
-import agent from '../../app/api/agent'
+import agent from '../../app/api/api'
 import { Container } from '@mui/material'
 
 interface TimeLeft {
@@ -29,21 +29,21 @@ const carouselItems: CarouselItem[] = [
       title: "Fall - Winter Collections 2030",
       subtitle: "SUMMER COLLECTION",
       description: "A specialist label creating luxury essentials. Ethically crafted with an unwavering commitment to exceptional quality.",
-      image: "/images/carousel-1.jpg",
+      image: "/images/carousel-1.png",
     },
     {
       id: 2,
       title: "Spring Collection 2030",
       subtitle: "NEW ARRIVALS",
       description: "Discover our latest collection of premium essentials designed for the modern lifestyle.",
-      image: "/images/carousel-2.jpg",
+      image: "/images/carousel-1.png",
     },
     {
       id: 3,
       title: "Summer Essentials",
       subtitle: "FEATURED COLLECTION",
       description: "Elevate your wardrobe with our curated selection of timeless pieces.",
-      image: "/images/carousel-3.jpg",
+      image: "/images/carousel-1.png",
     },
   ]
 

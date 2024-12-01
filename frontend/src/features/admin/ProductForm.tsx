@@ -1,4 +1,4 @@
-import { Typography, Grid, Paper, Box, Button } from "@mui/material";
+import { Typography, Grid, Paper, Box, Button, Container } from "@mui/material";
 import { FieldValues, useForm } from "react-hook-form";
 import AppTextInput from "../../app/components/AppTextInput";
 import { Product } from "../../app/models/product";
@@ -8,10 +8,10 @@ import AppSelectList from "../../app/components/AppSelectList";
 import AppDropzone from "../../app/components/AppDropzone";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "./productValidation";
-import agent from "../../app/api/agent";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { setProduct } from "../catalog/catalogSlice";
 import { LoadingButton } from "@mui/lab";
+import api from "../../app/api/api";
 
 interface Props {
     product?: Product;
@@ -37,9 +37,9 @@ export default function ProductForm({product, cancelEdit}: Props) {
         try {
             let response: Product;
             if (product) {
-                response = await agent.Admin.updateProduct(data);
+                response = await api.Admin.updateProduct(data);
             } else {
-                response = await agent.Admin.createProduct(data);
+                response = await api.Admin.createProduct(data);
             }
             dispatch(setProduct(response));
             cancelEdit();
@@ -49,6 +49,7 @@ export default function ProductForm({product, cancelEdit}: Props) {
     }
 
     return (
+        <Container>
         <Box component={Paper} sx={{p: 4}}>
             <Typography variant="h4" gutterBottom sx={{mb: 4}}>
                 Product Details
@@ -90,5 +91,6 @@ export default function ProductForm({product, cancelEdit}: Props) {
                 </Box>
             </form>
         </Box>
+        </Container>
     )
 }

@@ -5,7 +5,7 @@ import Review from "./Review";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "./checkoutValidation";
-import agent from "../../app/api/agent";
+import agent from "../../app/api/api";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { clearCart } from "../cart/cartSlice";
 import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";

@@ -3,7 +3,7 @@ import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { useEffect, useState } from "react";
-import agent from "../../app/api/agent";
+import agent from "../../app/api/api";
 import { setCart } from "../cart/cartSlice";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 

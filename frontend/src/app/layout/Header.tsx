@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import SignedInMenu from "./SignedInMenu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import agent from '../api/agent';
+import agent from '../api/api';
 import { resetProductParams, fetchProductsAsync } from '../../features/catalog/catalogSlice';
 import LoadingComponent from './LoadingComponent';
 
@@ -47,7 +47,7 @@ export default function Header() {
     setLoading(false);
   };
 
-  if (loading) return <LoadingComponent message="Loading catalog..." />;
+  if (loading) return <LoadingComponent message="Loading Shop..." />;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
@@ -66,7 +66,7 @@ export default function Header() {
                   <span
                     onClick={handleShopClick}
                     className={`inline-flex h-10 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-base font-medium text-black hover:bg-gray-100 focus:outline-none cursor-pointer ${
-                      pathname.startsWith('/catalog') ? 'after:absolute after:bottom-0 after:left-1/4 after:right-1/4 after:h-0.5 after:bg-[#C40C0C]' : ''
+                      pathname.startsWith('/catalog') ? 'after:absolute after:bottom-0 after:left-1/4 after:right-1/4 after:h-0.5 after:bg-[#973d3d]' : ''
                     }`}
                   >
                     {title}

@@ -1,1 +1,32 @@
-{}
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "ecommerce-db.cr8qwk0msmf5.us-east-1.rds.amazonaws.com",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "ecommerce",
+            "database": "ecommerceapp",
+            "username": "umarsatti",
+            "password": "Sirsatti123!"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "ecommerce-db.cr8qwk0msmf5.us-east-1.rds.amazonaws.com",
+            "driver": "MySQL",
+            "password": "Sirsatti123!",
+            "database": "ecommerceapp",
+            "username": "umarsatti",
+            "name": "ecommerce-connection",
+            "connectString": "\"DefaultConnection\": \"server=ecommerce-db.cr8qwk0msmf5.us-east-1.rds.amazonaws.com;port=3306;database=ecommerceapp;user=umarsatti;password=Sirsatti123!\""
+        }
+    ]
+}

@@ -1,7 +1,4 @@
-using System.Runtime.CompilerServices;
-using System.Text.Json;
 using AutoMapper;
-using AutoMapper.Configuration.Annotations;
 using backend.Data;
 using backend.DTOs;
 using backend.Entities;
@@ -82,28 +79,46 @@ namespace backend.Controllers
         //Admin Roles
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct([FromForm]CreateProductDto productDto)
+        public async Task<ActionResult<Product>> CreateProduct([FromForm] CreateProductDto productDto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                var errors = string.Join(", ", ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage));
+
+                Console.WriteLine($"Validation failed: {errors}");
+                return BadRequest(new ProblemDetails { Title = $"Validation failed: {errors}" });
+            }
+            
             var product = _mapper.Map<Product>(productDto);
 
             if (productDto.File != null)
             {
-                var imageResult = await _imageService.AddImageAsync(productDto.File);
+                try
+                {
+                    // Upload to S3 and get the public URL
+                    var imageUrl = await _imageService.AddImageAsync(productDto.File);
 
-                if (imageResult.Error != null) 
-                    return BadRequest(new ProblemDetails {Title = imageResult.Error.Message});
-
-                product.PictureUrl = imageResult.SecureUrl.ToString();
-                product.PublicId = imageResult.PublicId;
+                    product.PictureUrl = imageUrl; // Set the S3 URL
+                    product.PublicId = Path.GetFileName(new Uri(imageUrl).LocalPath); // Store the file name (key)
+                }
+                catch (Exception ex)
+                {
+                    // Log the detailed error and return a user-friendly message
+                    Console.WriteLine($"Image upload failed: {ex.Message}");
+                    return BadRequest(new ProblemDetails { Title = "Image upload failed. Please try again later." });
+                }
             }
 
             _context.Products.Add(product);
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return CreatedAtRoute("GetProduct", new {Id = product.Id}, product);
+            if (result) return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
 
-            return BadRequest(new ProblemDetails {Title = "Unable to create the new product"});
+            return BadRequest(new ProblemDetails { Title = "Unable to create the new product" });
         }
 
         [Authorize(Roles = "Admin")]
@@ -118,23 +133,22 @@ namespace backend.Controllers
 
             if (productDto.File != null)
             {
-                var imageResult = await _imageService.AddImageAsync(productDto.File);
-
-                if (imageResult.Error != null) 
-                    return BadRequest(new ProblemDetails {Title = imageResult.Error.Message});
-                
-                if (!string.IsNullOrEmpty(product.PublicId)) 
+                // Delete the old image from S3
+                if (!string.IsNullOrEmpty(product.PublicId))
                     await _imageService.DeleteImageAsync(product.PublicId);
 
-                product.PictureUrl = imageResult.SecureUrl.ToString();
-                product.PublicId = imageResult.PublicId;
+                // Upload the new image to S3
+                var imageUrl = await _imageService.AddImageAsync(productDto.File);
+
+                product.PictureUrl = imageUrl; // Set the new S3 URL
+                product.PublicId = Path.GetFileName(new Uri(imageUrl).LocalPath); // Store the new file name (key)
             }
 
             var result = await _context.SaveChangesAsync() > 0;
 
             if (result) return Ok(product);
 
-            return BadRequest(new ProblemDetails{Title = "Unable to update product"});
+            return BadRequest(new ProblemDetails { Title = "Unable to update product" });
         }
 
         [Authorize(Roles = "Admin")]
@@ -145,7 +159,8 @@ namespace backend.Controllers
 
             if (product == null) return NotFound();
 
-            if (!string.IsNullOrEmpty(product.PublicId)) 
+            // Delete the image from S3
+            if (!string.IsNullOrEmpty(product.PublicId))
                 await _imageService.DeleteImageAsync(product.PublicId);
 
             _context.Products.Remove(product);
@@ -154,7 +169,7 @@ namespace backend.Controllers
 
             if (result) return Ok();
 
-            return BadRequest(new ProblemDetails{Title = "Unable to delete product"});
+            return BadRequest(new ProblemDetails { Title = "Unable to delete product" });
         }
     }
 }

@@ -1,8 +1,9 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { Product, ProductParams } from "../../app/models/product";
-import agent from "../../app/api/agent";
+
 import { RootState } from "../../app/store/configureStore";
 import { MetaData } from "../../app/models/pagination";
+import api from "../../app/api/api";
 
 interface CatalogState {
     productsLoaded: boolean;
@@ -32,7 +33,7 @@ export const fetchProductsAsync = createAsyncThunk<Product[], void, {state: Root
     async (_, thunkAPI) => {
         const params = getAxiosParams(thunkAPI.getState().catalog.productParams);
         try {
-            const response = await agent.Catalog.list(params);
+            const response = await api.Catalog.list(params);
             thunkAPI.dispatch(setMetaData(response.metaData));
             return response.items;
         } catch (error: any) {
@@ -45,7 +46,7 @@ export const fetchFilters = createAsyncThunk(
     'catalog/fetchFilters',
     async (_, thunkAPI) => {
         try {
-            return agent.Catalog.fetchFilters();
+            return api.Catalog.fetchFilters();
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data})
         }
@@ -56,7 +57,7 @@ export const fetchProductAsync = createAsyncThunk<Product, number>(
     'catalog/fetchProductAsync',
     async (productId, thunkAPI) => {
         try {
-            return await agent.Catalog.details(productId);
+            return await api.Catalog.details(productId);
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data})
         }
@@ -68,7 +69,7 @@ export const fetchProductsByBrandAsync = createAsyncThunk<Product[], string>(
     'catalog/fetchProductsByBrandAsync',
     async (brand, thunkAPI) => {
         try {
-            return await agent.Catalog.fetchByBrand(brand);
+            return await api.Catalog.fetchByBrand(brand);
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error.data });
         }

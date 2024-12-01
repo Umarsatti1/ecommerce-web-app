@@ -1,4 +1,3 @@
-import { Container, Grid } from "@mui/material";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { setPageNumber, setProductParams } from "./catalogSlice";
@@ -8,43 +7,52 @@ import AppPagination from "../../app/components/AppPagination";
 import useProducts from "../../app/hooks/useProducts";
 import CheckboxDropdown from "../../app/components/CheckboxButtons";
 import SortDropdown from "../../app/components/RadioButtonGroup";
+import { Container } from "@mui/material";
 
 const sortOptions = [
-  {value: 'name', label: 'Alphabetical'},
-  {value: 'priceDesc', label: 'Price - High to Low'},
-  {value: 'price', label: 'Price - Low to High'},
-]
+  { value: "name", label: "Alphabetical" },
+  { value: "priceDesc", label: "Price - High to Low" },
+  { value: "price", label: "Price - Low to High" },
+];
 
 export default function Catalog() {
-    const {products, brands, types, filtersLoaded, metaData} = useProducts();
-    const { productParams } = useAppSelector(state => state.catalog);
-    const dispatch = useAppDispatch();
+  const { products, brands, types, filtersLoaded, metaData } = useProducts();
+  const { productParams } = useAppSelector((state) => state.catalog);
+  const dispatch = useAppDispatch();
 
-  if (!filtersLoaded) return <LoadingComponent message='Loading products...'/>
+  if (!filtersLoaded) return <LoadingComponent message="Loading products..." />;
 
-    return (
+  return (
+    <>
+      {/* Page Heading */}
+      <div className="w-full bg-gray-100 py-6">
+        <h1 className="text-center text-4xl font-semibold text-gray-800">Shop All Products</h1>
+      </div>
+
       <Container>
-        <Grid container columnSpacing={4}>
-          <Grid item xs={3}>
-              <ProductSearch />
-            <div className="flex justify-end mb-4">
-              <SortDropdown 
-                options={sortOptions}
-                selectedValue={productParams.orderBy}
-                onChange={(value) => dispatch(setProductParams({orderBy: value}))}
-              />
-            </div>
+        <div className="container mx-auto mt-8 mb-10 px-4">
+          {/* Sort Dropdown */}
+          <div className="mb-6 flex justify-end pr-3">
+            <SortDropdown
+              options={sortOptions}
+              selectedValue={productParams.orderBy}
+              onChange={(value) => dispatch(setProductParams({ orderBy: value }))}
+            />
+          </div>
 
-            
-              <div className="mb-6">
-                <CheckboxDropdown 
+          {/* Filters and Products */}
+          <div className="flex gap-6">
+            {/* Filters */}
+            <div className="w-1/4">
+              <ProductSearch />
+              <div className="mt-6 mb-6">
+                <CheckboxDropdown
                   title="BRANDS"
                   items={brands}
                   checked={productParams.brands}
                   onChange={(items: string[]) => dispatch(setProductParams({ brands: items }))}
                 />
               </div>
-         
               <div className="mb-6">
                 <CheckboxDropdown
                   title="TYPE"
@@ -53,21 +61,25 @@ export default function Catalog() {
                   onChange={(items: string[]) => dispatch(setProductParams({ types: items }))}
                 />
               </div>
-            
+            </div>
 
-          </Grid>
-          <Grid item xs={9}>
-            <ProductList products={products} />
-          </Grid>
-          <Grid item xs={3} />
-          <Grid item xs={9} sx={{mb: 2}}>
-            {metaData &&
-            <AppPagination 
-              metaData={metaData}
-              onPageChange={(page: number) => dispatch(setPageNumber({pageNumber: page}))}
-            />}
-          </Grid>
-        </Grid>
-        </Container>
-    )
+            {/* Product List */}
+            <div className="w-3/4">
+              <ProductList products={products} />
+            </div>
+          </div>
+
+          {/* Pagination */}
+          <div className="mt-8 flex justify-end pr-3 pb-8">
+            {metaData && (
+              <AppPagination
+                metaData={metaData}
+                onPageChange={(page: number) => dispatch(setPageNumber({ pageNumber: page }))}
+              />
+            )}
+          </div>
+        </div>
+      </Container>
+    </>
+  );
 }
