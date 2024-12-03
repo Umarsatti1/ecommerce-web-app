@@ -44,8 +44,8 @@ jobs:
           docker ps | grep ecommerce-container
 
       # Step 7: Cleanup Docker resources
-      - name: Cleanup Docker Resources
-        if: always()
-        run: |
-          docker stop ecommerce-container || true
-          docker rm ecommerce-container || true
+      #- name: Cleanup Docker Resources
+        #()
+        #run: |
+          #docker stop ecommerce-container || true
+          #docker rm ecommerce-container || true
