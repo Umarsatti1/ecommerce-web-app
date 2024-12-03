@@ -1,8 +1,6 @@
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Amazon.Extensions.NETCore.Setup;
-using Microsoft.Extensions.Configuration;
 
 namespace backend.Services
 {

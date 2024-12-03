@@ -22,4 +22,5 @@ COPY --from=build /app/backend/out ./
 # Expose the application port (8080)
 EXPOSE 8080
 
+# Start the application
 ENTRYPOINT ["dotnet", "backend.dll"]

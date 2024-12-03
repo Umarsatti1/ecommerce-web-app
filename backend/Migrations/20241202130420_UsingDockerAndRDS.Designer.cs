@@ -12,8 +12,8 @@ using backend.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241201133840_AddedPages")]
-    partial class AddedPages
+    [Migration("20241202130420_UsingDockerAndRDS")]
+    partial class UsingDockerAndRDS
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
