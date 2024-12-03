@@ -11,7 +11,8 @@ export interface Order {
   }
   
   export interface ShippingAddress {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     address1: string;
     address2: string;
     city: string;

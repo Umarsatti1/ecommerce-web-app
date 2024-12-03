@@ -1,8 +1,9 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { Product, ProductParams } from "../../app/models/product";
-import agent from "../../app/api/agent";
+
 import { RootState } from "../../app/store/configureStore";
 import { MetaData } from "../../app/models/pagination";
+import api from "../../app/api/api";
 
 interface CatalogState {
     productsLoaded: boolean;
@@ -32,7 +33,7 @@ export const fetchProductsAsync = createAsyncThunk<Product[], void, {state: Root
     async (_, thunkAPI) => {
         const params = getAxiosParams(thunkAPI.getState().catalog.productParams);
         try {
-            const response = await agent.Catalog.list(params);
+            const response = await api.Catalog.list(params);
             thunkAPI.dispatch(setMetaData(response.metaData));
             return response.items;
         } catch (error: any) {
@@ -45,7 +46,7 @@ export const fetchFilters = createAsyncThunk(
     'catalog/fetchFilters',
     async (_, thunkAPI) => {
         try {
-            return agent.Catalog.fetchFilters();
+            return api.Catalog.fetchFilters();
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data})
         }
@@ -56,12 +57,24 @@ export const fetchProductAsync = createAsyncThunk<Product, number>(
     'catalog/fetchProductAsync',
     async (productId, thunkAPI) => {
         try {
-            return await agent.Catalog.details(productId);
+            return await api.Catalog.details(productId);
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data})
         }
     }
 )
+
+//Fetch Products by Brand Name
+export const fetchProductsByBrandAsync = createAsyncThunk<Product[], string>(
+    'catalog/fetchProductsByBrandAsync',
+    async (brand, thunkAPI) => {
+        try {
+            return await api.Catalog.fetchByBrand(brand);
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue({ error: error.data });
+        }
+    }
+);
 
 function initParams() {
     return {
@@ -98,6 +111,14 @@ export const catalogSlice = createSlice({
         },
         resetProductParams: (state) => {
             state.productParams = initParams();
+        },
+        setProduct: (state, action) => {
+            productsAdapter.upsertOne(state, action.payload);
+            state.productsLoaded = false;
+        },
+        removeProduct: (state, action) => {
+            productsAdapter.removeOne(state, action.payload);
+            state.productsLoaded = false;
         }
     },
     extraReducers: (builder => {
@@ -136,10 +157,24 @@ export const catalogSlice = createSlice({
         builder.addCase(fetchFilters.rejected, (state, action) => {
             state.status = 'idle';
             console.log(action.payload);
-        })
+        });
+        
+        //Fetch products by brand name
+        builder.addCase(fetchProductsByBrandAsync.pending, (state) => {
+            state.status = 'pendingFetchProductsByBrand';
+        });
+        builder.addCase(fetchProductsByBrandAsync.fulfilled, (state, action) => {
+            productsAdapter.setAll(state, action.payload);
+            state.status = 'idle';
+            state.productsLoaded = true;
+        });
+        builder.addCase(fetchProductsByBrandAsync.rejected, (state, action) => {
+            console.log(action.payload);
+            state.status = 'idle';
+        });
     })
 })
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.catalog);
 
-export const {setProductParams, resetProductParams, setMetaData, setPageNumber} = catalogSlice.actions;
+export const {setProductParams, resetProductParams, setMetaData, setPageNumber, setProduct, removeProduct} = catalogSlice.actions;

@@ -7,6 +7,7 @@ export interface Product {
     type?: string
     brand: string
     quantityInStock?: number
+    rating?: number
 }
 
 export interface ProductParams {

@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import { Cart } from "../../app/models/cart"
-import agent from "../../app/api/agent";
+
 import { getCookie } from "../../app/util/util";
+import api from "../../app/api/api";
 
 interface CartState {
     cart: Cart | null;
@@ -17,7 +18,7 @@ export const fetchCartAsync = createAsyncThunk<Cart>(
     'cart/fetchCartAsync',
     async (_, thunkAPI) => {
         try {
-            return await agent.Cart.get();
+            return await api.Cart.get();
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data});
         }
@@ -33,7 +34,7 @@ export const addCartItemAsync = createAsyncThunk<Cart, {productId: number, quant
     'cart/addCartItemAsync',
     async ({productId, quantity = 1}, thunkAPI) => {
         try {
-            return await agent.Cart.addItem(productId, quantity);
+            return await api.Cart.addItem(productId, quantity);
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data})
         }
@@ -44,7 +45,7 @@ export const removeCartItemAsync = createAsyncThunk<void, {productId: number, qu
     'cart/removeCartItemAsync',
     async ({productId, quantity}, thunkAPI) => {
         try {
-            await agent.Cart.removeItem(productId, quantity);
+            await api.Cart.removeItem(productId, quantity);
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data})
         }
@@ -67,7 +68,7 @@ export const cartSlice = createSlice ({
             state.status = 'pendingAddItem' + action.meta.arg.productId;
         });
         builder.addCase(removeCartItemAsync.pending, (state, action) => {
-            state.status = 'pendingRemoveItem' + action.meta.arg.productId + action.meta.arg.name;
+            state.status = 'pendingRemoveItem' + action.meta.arg.productId + 'rem';
         });
         builder.addCase(removeCartItemAsync.fulfilled, (state, action) => {
             const {productId, quantity} = action.meta.arg;

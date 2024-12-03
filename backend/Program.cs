@@ -1,7 +1,9 @@
 using System.Text;
+using Amazon.S3;
 using backend.Data;
 using backend.Entities;
 using backend.Middleware;
+using backend.RequestHelpers;
 using backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -46,7 +49,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
-        new MySqlServerVersion(new Version(8, 0, 21))
+        new MySqlServerVersion(new Version(8, 0, 39))
     )
 );
 
@@ -85,6 +88,14 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
 
+// Add AWS S3 Service registration
+builder.Services.AddAWSService<IAmazonS3>();
+
+builder.Services.AddScoped<ImageService>();
+
+// Configure AWS options from appsettings.json
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+
 var app = builder.Build();
 
 // Middleware configuration
@@ -99,6 +110,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 // Enable CORS using the defined policy
 app.UseCors("CorsPolicy");
 
@@ -108,6 +122,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 // Database migration and initialization
 var scope = app.Services.CreateScope();

@@ -5,5 +5,7 @@ namespace backend.DTOs
         public string Email { get; set; }
         public string Token { get; set; }
         public CartDto Cart { get; set; }
+        public string FirstName { get; set; }  // Add this
+        public string LastName { get; set; }   // Add this
     }
 }
