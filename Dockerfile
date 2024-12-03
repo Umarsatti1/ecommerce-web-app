@@ -3,13 +3,22 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy project files
-COPY *.sln ./
+COPY *.sln ./ 
 COPY backend/*.csproj ./backend/
 RUN dotnet restore
 
+# Copy the frontend files
+COPY frontend ./frontend
+
+# Go to the /app/frontend directory and run 'npm run build'
+WORKDIR /app/frontend
+RUN npm install && npm run build
+
+# Go back to /app/backend
+WORKDIR /app/backend
+
 # Copy the remaining application files
 COPY backend/. ./backend/
-WORKDIR /app/backend
 
 # Build the application in Release mode
 RUN dotnet publish -c Release -o out
