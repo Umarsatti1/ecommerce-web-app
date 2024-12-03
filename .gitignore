@@ -10,8 +10,8 @@
 *.swp
 *.DS_Store
 
-#Ignore VS Code
-*.vscode
+# Ignore VS Code folder
+.vscode/
 
 # Ignore build outputs
 bin/
