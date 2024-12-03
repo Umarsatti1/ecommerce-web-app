@@ -30,7 +30,7 @@ jobs:
         run: |
           docker build -t ecommerce-app .  # Build the Docker image
 
-      # Step 5: Set environment variable for DB Connection String
+      # Step 5: Set environment variable for DB Connection String (for EC2 instance)
       - name: Set up connection string for DB
         run: |
           echo "DB_CONNECTION_STRING=server=ecommerce-db.cr8qwk0msmf5.us-east-1.rds.amazonaws.com;port=3306;database=ecommerceapp;user=umarsatti;password=Sirsatti123!" >> $GITHUB_ENV
@@ -41,17 +41,20 @@ jobs:
           EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Securely store the EC2 private key in GitHub Secrets
           EC2_HOST: ${{ secrets.EC2_HOST }}  # EC2 instance public IP or DNS name
         run: |
-          # Start the SSH agent and add the EC2 private key
+          # Start the SSH agent
           eval $(ssh-agent -s)
-          echo "$EC2_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+          
+          # Remove problematic carriage returns and load the key
+          echo "$EC2_PRIVATE_KEY" | sed 's/\r$//' | ssh-add -
+
+          # Ensure the .ssh directory exists with correct permissions
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # Configure SSH to skip host key checking
+          # Skip host key checking for convenience
           echo -e "Host $EC2_HOST\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-          chmod 600 ~/.ssh/config
 
-          # SSH into EC2 instance and deploy Docker container
+          # SSH into the EC2 instance and deploy the application
           ssh ubuntu@$EC2_HOST << 'EOF'
             cd /home/ubuntu/ecommerce-web-app
             git pull origin main
@@ -61,10 +64,3 @@ jobs:
             sudo docker run -d --name ecommerce-container -p 8080:8080 ecommerce-app
             sudo docker ps
           EOF
-
-      # Step 7: Optional: Clean up Docker resources (if necessary)
-      - name: Cleanup Docker Resources (if necessary)
-        if: always()
-        run: |
-          sudo docker stop ecommerce-container || true
-          sudo docker rm ecommerce-container || true
