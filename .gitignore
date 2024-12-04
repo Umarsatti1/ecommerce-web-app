@@ -21,4 +21,3 @@ backend/obj/
 
 # Ignore frontend dependencies
 frontend/node_modules/
-frontend/dist/
