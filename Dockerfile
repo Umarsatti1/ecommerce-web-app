@@ -12,7 +12,7 @@ COPY *.sln ./
 COPY backend/*.csproj ./backend/
 RUN dotnet restore
 COPY backend/ ./backend/
-RUN dotnet publish -c Release -o /app/backend/out
+RUN dotnet publish -c Release -o /app/backend/out backend.csproj
 
 # Stage 3: Final image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

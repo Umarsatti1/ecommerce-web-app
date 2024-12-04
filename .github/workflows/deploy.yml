@@ -20,10 +20,10 @@ jobs:
 
       # Step 3: Build the frontend
       - name: Build Frontend
-        working-directory: frontend  # Frontend directory
+        working-directory: frontend
         run: |
-          npm install  # Install dependencies
-          npm run build  # Build the frontend (outputs to frontend/dist)
+          npm install
+          npm run build
 
       # Step 4: Verify Frontend Build
       - name: Verify Frontend Build
@@ -40,7 +40,7 @@ jobs:
       - name: Build Backend
         working-directory: backend
         run: |
-          dotnet publish -c Release -o ./out
+          dotnet publish -c Release -o ./out backend.csproj
 
       # Step 7: Verify Backend Build
       - name: Verify Backend Build
@@ -63,39 +63,28 @@ jobs:
         run: |
           # Start the SSH agent
           eval $(ssh-agent -s)
-          
-          # Remove problematic carriage returns and load the key
-          echo "$EC2_PRIVATE_KEY" | sed 's/\r$//' | ssh-add - 
+          echo "$EC2_PRIVATE_KEY" | sed 's/\r$//' | ssh-add -
 
-          # Ensure the .ssh directory exists with correct permissions
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-
-          # Skip host key checking for convenience
           echo -e "Host $EC2_HOST\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
-          # SSH into the EC2 instance and deploy the application
           ssh ubuntu@$EC2_HOST << 'EOF'
             cd /home/ubuntu/ecommerce-web-app || git clone https://github.com/Umarsatti1/ecommerce-web-app.git /home/ubuntu/ecommerce-web-app
             cd /home/ubuntu/ecommerce-web-app
 
-            # Reset and pull latest code
             git reset --hard
             git clean -fd
             git pull origin main
 
-            # Stop and remove any existing containers
             sudo docker stop ecommerce-container || true
             sudo docker rm ecommerce-container || true
 
-            # Prune unused Docker images and system
             sudo docker image prune -af
             sudo docker system prune -a -f
 
-            # Build and run the new Docker container with DB connection
             sudo docker build --no-cache -t ecommerce-app .
             sudo docker run -d --name ecommerce-container -p 80:8080 -e DB_CONNECTION_STRING=$DB_CONNECTION_STRING ecommerce-app
 
-            # Verify the running container
             sudo docker ps
           EOF
