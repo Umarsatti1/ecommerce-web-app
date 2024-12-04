@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest  # GitHub-hosted runner for building
+    runs-on: ubuntu-22.04  # GitHub-hosted runner for building
 
     steps:
       # Step 1: Checkout the repository
@@ -28,7 +28,7 @@ jobs:
       # Step 4: Build the Docker image
       - name: Build Docker Image
         run: |
-          docker build -t ecommerce-app .  # Build the Docker image
+          docker build --no-cache -t ecommerce-app .  # Build the Docker image
 
       # Step 5: Set up connection string for DB (stored in GitHub Secrets)
       - name: Set up DB connection string from GitHub Secrets
@@ -56,20 +56,27 @@ jobs:
 
           # SSH into the EC2 instance and deploy the application
           ssh ubuntu@$EC2_HOST << 'EOF'
+            # Clone the repository if it doesn't exist
+            if [ ! -d "/home/ubuntu/ecommerce-web-app" ]; then
+              git clone https://github.com/<your-username>/<your-repo-name>.git /home/ubuntu/ecommerce-web-app
+            fi
+
             cd /home/ubuntu/ecommerce-web-app
-            
-            # Reset the local repository to match the remote main branch
+
+            # Pull the latest changes
             git fetch origin
             git reset --hard origin/main
+            git clean -fd
 
             # Use the DB connection string from the environment variable
             export DB_CONNECTION_STRING="$DB_CONNECTION_STRING"
 
-            # Stop and remove the old container, if any
+            # Stop and remove old containers/images
             sudo docker stop ecommerce-container || true
             sudo docker rm ecommerce-container || true
+            sudo docker image prune -f
 
-            # Build a fresh Docker image (no cache)
+            # Build a fresh Docker image
             sudo docker build --no-cache -t ecommerce-app .
 
             # Run the new container
