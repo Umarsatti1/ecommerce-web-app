@@ -10,17 +10,25 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Linq;  // Add this to parse JSON
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Fetch secrets from AWS Secrets Manager
 var dbSecret = await SecretsHelper.GetSecretStringAsync("/ecommerceapp/database-connection");
-Console.WriteLine($"Database Connection String: {dbSecret}"); // Log to verify
+
+// Parse the secret string to extract the connection string
+var dbSecretJson = JObject.Parse(dbSecret);
+var dbConnectionString = dbSecretJson["DefaultConnection"]?.ToString();  // Extract the connection string
+
+// Log to verify the connection string (remove in production)
+Console.WriteLine($"Database Connection String: {dbConnectionString}"); 
+
 var stripeSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/stripe");
 var awsSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/aws");
 
 // Add secrets to configuration
-builder.Configuration["ConnectionStrings:DefaultConnection"] = dbSecret;
+builder.Configuration["ConnectionStrings:DefaultConnection"] = dbConnectionString;
 builder.Configuration["StripeSettings:PublishableKey"] = stripeSecrets["PublishableKey"];
 builder.Configuration["StripeSettings:SecretKey"] = stripeSecrets["SecretKey"];
 builder.Configuration["StripeSettings:WhSecret"] = stripeSecrets["WhSecret"];
@@ -60,6 +68,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Configure DbContext with the correct connection string
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -84,6 +93,7 @@ builder.Services.AddIdentityCore<User>(opt =>
 })
     .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
@@ -97,6 +107,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
+
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
@@ -130,6 +141,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
+// Apply migrations and initialize the database
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
