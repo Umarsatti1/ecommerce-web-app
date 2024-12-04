@@ -62,13 +62,6 @@ jobs:
             # Fetch the latest code from GitHub (make sure we're on the main branch)
             git pull origin main
 
-            # Run npm build
-            cd frontend
-            npm run build
-            cd ..
-            cd backend
-            dotnet run & sleep 15 && kill $!
-
             # Stop and remove any existing containers
             sudo docker stop ecommerce-container || true
             sudo docker rm ecommerce-container || true
