@@ -18,28 +18,45 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Install frontend dependencies and build the frontend
+      # Step 3: Build the frontend
       - name: Build Frontend
-        working-directory: frontend  # Set working directory to frontend
+        working-directory: frontend  # Frontend directory
         run: |
           npm install  # Install dependencies
           npm run build  # Build the frontend
 
-      # Step 4: Build Docker image
+      # Step 4: Copy frontend build to backend wwwroot
+      - name: Copy Frontend Build to Backend wwwroot
+        run: |
+          cp -r frontend/dist/* backend/wwwroot/
+
+      # Step 5: Set up .NET for backend build
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      # Step 6: Build and publish the backend
+      - name: Build Backend
+        working-directory: backend
+        run: |
+          dotnet publish -c Release -o out
+
+      # Step 7: Build Docker image
       - name: Build Docker Image
         run: |
-          docker build -t ecommerce-app .  # Build the Docker image
+          docker build --no-cache -t ecommerce-app .
 
-      # Step 5: Set up DB connection string from GitHub Secrets
+      # Step 8: Set up DB connection string from GitHub Secrets
       - name: Set up DB connection string from GitHub Secrets
         run: |
           echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
 
-      # Step 6: Deploy to EC2 instance
+      # Step 9: Deploy to EC2 instance
       - name: Deploy to EC2 Instance
         env:
-          EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Securely store the EC2 private key in GitHub Secrets
-          EC2_HOST: ${{ secrets.EC2_HOST }}  # EC2 instance public IP or DNS name
+          EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           # Start the SSH agent
           eval $(ssh-agent -s)
@@ -59,7 +76,9 @@ jobs:
             cd /home/ubuntu/ecommerce-web-app || git clone https://github.com/Umarsatti1/ecommerce-web-app.git /home/ubuntu/ecommerce-web-app
             cd /home/ubuntu/ecommerce-web-app
 
-            # Fetch the latest code from GitHub (make sure we're on the main branch)
+            # Reset and pull latest code
+            git reset --hard
+            git clean -fd
             git pull origin main
 
             # Stop and remove any existing containers
