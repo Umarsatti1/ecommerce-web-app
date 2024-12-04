@@ -1,4 +1,4 @@
-name: Manual Deployment of E-Commerce Application
+name: Deploying E-Commerce Application using CI/CD
 
 on:
   workflow_dispatch:  # Manually trigger the workflow from GitHub Actions UI
