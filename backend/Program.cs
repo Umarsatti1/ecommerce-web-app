@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Fetch secrets from AWS Secrets Manager
 var dbSecret = await SecretsHelper.GetSecretStringAsync("/ecommerceapp/database-connection");
+Console.WriteLine($"Database Connection String: {dbSecret}"); // Log to verify
 var stripeSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/stripe");
 var awsSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/aws");
 
