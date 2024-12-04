@@ -19,8 +19,11 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/backend/out ./
 
-# Copy the frontend dist (now present in backend/wwwroot)
-COPY backend/wwwroot /app/backend
+# Explicitly create the backend/wwwroot directory to avoid issues
+RUN mkdir -p /app/backend/wwwroot
+
+# Copy the frontend dist (now present in backend/wwwroot) into the container
+COPY backend/wwwroot /app/backend/wwwroot
 
 # Expose the application port (8080)
 EXPOSE 8080
