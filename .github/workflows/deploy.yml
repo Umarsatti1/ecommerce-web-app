@@ -66,8 +66,9 @@ jobs:
             sudo docker stop ecommerce-container || true
             sudo docker rm ecommerce-container || true
 
-            # Prune unused Docker images
+            # Prune unused Docker images and system
             sudo docker image prune -af
+            sudo docker system prune -a -f
 
             # Build and run the new Docker container
             sudo docker build --no-cache -t ecommerce-app .

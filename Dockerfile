@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=build /app/backend/out ./
 
 # Copy the frontend dist (now present in backend/wwwroot)
-COPY backend/wwwroot /app/wwwroot
+COPY backend/wwwroot /app/backend/wwwroot
 
 # Expose the application port (8080)
 EXPOSE 8080
