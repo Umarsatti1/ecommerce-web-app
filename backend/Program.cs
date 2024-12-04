@@ -13,8 +13,24 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Fetch secrets from AWS Secrets Manager
+var dbSecret = await SecretsHelper.GetSecretStringAsync("/ecommerceapp/database-connection");
+var jwtSecret = await SecretsHelper.GetSecretAsync("/ecommerceapp/jwt");
+var stripeSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/stripe");
+var awsSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/aws");
 
+// Add secrets to configuration
+builder.Configuration["ConnectionStrings:DefaultConnection"] = dbSecret;
+builder.Configuration["JWTSettings:TokenKey"] = jwtSecret["TokenKey"];
+builder.Configuration["StripeSettings:PublishableKey"] = stripeSecrets["PublishableKey"];
+builder.Configuration["StripeSettings:SecretKey"] = stripeSecrets["SecretKey"];
+builder.Configuration["StripeSettings:WhSecret"] = stripeSecrets["WhSecret"];
+builder.Configuration["AWS:BucketName"] = awsSecrets["BucketName"];
+builder.Configuration["AWS:AccessKey"] = awsSecrets["AccessKey"];
+builder.Configuration["AWS:SecretKey"] = awsSecrets["SecretKey"];
+builder.Configuration["AWS:Region"] = awsSecrets["Region"];
+
+// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddEndpointsApiExplorer();
@@ -45,34 +61,32 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Configure Entity Framework with MySQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
+        builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 39))
     )
 );
 
-// Configure CORS policy to allow requests from frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // frontend URL
+        builder.WithOrigins("http://localhost:3000")
                .AllowAnyHeader()
                .AllowAnyMethod()
-               .AllowCredentials(); // necessary for cookies
+               .AllowCredentials();
     });
 });
 
-builder.Services.AddIdentityCore<User>(opt => 
+builder.Services.AddIdentityCore<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
 })
     .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opt => 
+    .AddJwtBearer(opt =>
     {
         opt.TokenValidationParameters = new TokenValidationParameters
         {
@@ -80,25 +94,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
-                GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
-
-// Add AWS S3 Service registration
 builder.Services.AddAWSService<IAmazonS3>();
-
 builder.Services.AddScoped<ImageService>();
-
-// Configure AWS options from appsettings.json
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
 var app = builder.Build();
 
-// Middleware configuration
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -113,7 +121,6 @@ if (app.Environment.IsDevelopment())
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Enable CORS using the defined policy
 app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
@@ -124,7 +131,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
-// Database migration and initialization
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();

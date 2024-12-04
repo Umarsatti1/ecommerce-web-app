@@ -30,10 +30,10 @@ jobs:
         run: |
           docker build -t ecommerce-app .  # Build the Docker image
 
-      # Step 5: Set environment variable for DB Connection String (for EC2 instance)
-      - name: Set up connection string for DB
+      # Step 5: Set up connection string for DB (stored in GitHub Secrets)
+      - name: Set up DB connection string from GitHub Secrets
         run: |
-          echo "DB_CONNECTION_STRING=server=ecommerce-db.cr8qwk0msmf5.us-east-1.rds.amazonaws.com;port=3306;database=ecommerceapp;user=umarsatti;password=Sirsatti123!" >> $GITHUB_ENV
+          echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
 
       # Step 6: Deploy to EC2 instance
       - name: Deploy to EC2 Instance
@@ -45,7 +45,7 @@ jobs:
           eval $(ssh-agent -s)
           
           # Remove problematic carriage returns and load the key
-          echo "$EC2_PRIVATE_KEY" | sed 's/\r$//' | ssh-add -
+          echo "$EC2_PRIVATE_KEY" | sed 's/\r$//' | ssh-add - 
 
           # Ensure the .ssh directory exists with correct permissions
           mkdir -p ~/.ssh
@@ -59,8 +59,11 @@ jobs:
             cd /home/ubuntu/ecommerce-web-app
             git pull origin main
 
-            export DB_CONNECTION_STRING="server=ecommerce-db.cr8qwk0msmf5.us-east-1.rds.amazonaws.com;port=3306;database=ecommerceapp;user=umarsatti;password=Sirsatti123!"
+            # Use the DB connection string from the environment variable
+            export DB_CONNECTION_STRING="$DB_CONNECTION_STRING"
+
+            # Build and deploy the Docker container
             sudo docker build -t ecommerce-app .
-            sudo docker run -d --name ecommerce-container -p 8080:8080 ecommerce-app
+            sudo docker run -d --name ecommerce-container -p 80:8080 ecommerce-app
             sudo docker ps
           EOF
