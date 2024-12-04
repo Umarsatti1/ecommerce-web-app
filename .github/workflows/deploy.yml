@@ -18,17 +18,17 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Build the frontend
+      # Step 3: Install frontend dependencies and build the frontend
       - name: Build Frontend
         working-directory: frontend  # Frontend directory
         run: |
           npm install  # Install dependencies
-          npm run build  # Build the frontend
+          npm run build  # Build the frontend (outputs to backend/wwwroot)
 
-      # Step 4: Copy frontend build to backend wwwroot
-      - name: Copy Frontend Build to Backend wwwroot
+      # Step 4: Debug Backend wwwroot Contents
+      - name: Verify Backend wwwroot Directory
         run: |
-          cp -r frontend/dist/* backend/wwwroot/
+          ls -la backend/wwwroot || echo "wwwroot folder not found or empty!"
 
       # Step 5: Set up .NET for backend build
       - name: Set up .NET
