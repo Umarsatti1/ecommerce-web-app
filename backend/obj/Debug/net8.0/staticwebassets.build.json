@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "wAfQ3xDzwyZjou46S5ozkP21NW7F5rj2wdR4qrCUITg=",
+  "Hash": "Sn3amCDellgC3Gu+CQpVAp5UVW+dMStfGV/sy3iq6n4=",
   "Source": "backend",
   "BasePath": "_content/backend",
   "Mode": "Default",
@@ -53,25 +53,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\index-DeT5wBTw.js"
-    },
-    {
-      "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-xvcKfVA_.js",
-      "SourceId": "backend",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\",
-      "BasePath": "_content/backend",
-      "RelativePath": "assets/index-xvcKfVA_.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\assets\\index-xvcKfVA_.js"
     },
     {
       "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\open-sans-cyrillic-300-normal-DHmBZ-tM.woff2",
