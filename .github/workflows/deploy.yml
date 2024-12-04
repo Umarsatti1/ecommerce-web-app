@@ -24,8 +24,14 @@ jobs:
         run: |
           npm install  # Install dependencies
           npm run build  # Build the frontend
+      
+      # Step 4: RUN dotnet run and kill it
+      - name: RUN .NET Application
+        working-directory: backend
+        run: |
+          dotnet run & sleep 15 && kill $!
 
-      # Step 4: Build Docker image
+      # Step 5: Build Docker image
       - name: Build Docker Image
         run: |
           docker build -t ecommerce-app .  # Build the Docker image
