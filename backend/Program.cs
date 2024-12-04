@@ -15,13 +15,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Fetch secrets from AWS Secrets Manager
 var dbSecret = await SecretsHelper.GetSecretStringAsync("/ecommerceapp/database-connection");
-var jwtSecret = await SecretsHelper.GetSecretAsync("/ecommerceapp/jwt");
 var stripeSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/stripe");
 var awsSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/aws");
 
 // Add secrets to configuration
 builder.Configuration["ConnectionStrings:DefaultConnection"] = dbSecret;
-builder.Configuration["JWTSettings:TokenKey"] = jwtSecret["TokenKey"];
 builder.Configuration["StripeSettings:PublishableKey"] = stripeSecrets["PublishableKey"];
 builder.Configuration["StripeSettings:SecretKey"] = stripeSecrets["SecretKey"];
 builder.Configuration["StripeSettings:WhSecret"] = stripeSecrets["WhSecret"];
