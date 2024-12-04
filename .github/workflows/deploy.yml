@@ -25,17 +25,29 @@ jobs:
           npm install  # Install dependencies
           npm run build  # Build the frontend
 
-      # Step 4: Build Docker image
+      # Step 4: Set up .NET (for backend build)
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'  # Specify the .NET version
+
+      # Step 5: Build and Publish Backend (including updated wwwroot)
+      - name: Build Backend
+        working-directory: backend
+        run: |
+          dotnet publish -c Release -o out  # Build the backend with updated wwwroot
+
+      # Step 6: Build Docker image
       - name: Build Docker Image
         run: |
           docker build -t ecommerce-app .  # Build the Docker image
 
-      # Step 5: Set up DB connection string from GitHub Secrets
+      # Step 7: Set up DB connection string from GitHub Secrets
       - name: Set up DB connection string from GitHub Secrets
         run: |
           echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
 
-      # Step 6: Deploy to EC2 instance
+      # Step 8: Deploy to EC2 instance
       - name: Deploy to EC2 Instance
         env:
           EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Securely store the EC2 private key in GitHub Secrets
