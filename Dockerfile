@@ -19,7 +19,6 @@ WORKDIR /app
 COPY --from=build /app/backend/out ./backend
 
 # Copy the built frontend assets into the 'wwwroot' folder in the backend
-# (These were copied during the workflow step into the backend/wwwroot folder)
 COPY ./backend/wwwroot /app/backend/wwwroot
 
 # Expose the application port (8080)
