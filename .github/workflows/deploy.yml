@@ -1,27 +1,50 @@
-name: E-commerce app using CI/CD 
+name: Deploy E-commerce App using CI/CD
 
 on:
-  workflow_dispatch:  # Manually trigger the workflow from GitHub Actions UI
+  workflow_dispatch: # Manually trigger the workflow from GitHub Actions UI
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Set up SSH Agent
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
+      # Step 3: Test SSH Connection (Debugging)
+      - name: Test SSH Connection
+        run: |
+          ssh -v -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} exit
+
+      # Step 4: Deploy the Application
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << EOF
+            # Change to the project directory
+            if [ ! -d "~/ecommerce-web-app" ]; then
+              echo "Cloning repository for the first time"
+              git clone -b test https://github.com/Umarsatti1/ecommerce-web-app.git ecommerce-web-app
+            fi
             cd ~/ecommerce-web-app
+
+            # Switch to the 'test' branch and pull the latest changes
+            git fetch origin
+            git checkout test
+            git reset --hard origin/test
+            git clean -fd
+
+            # Set environment variables
             echo "AWS_REGION=${{ secrets.AWS_REGION }}" > .env
             echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
+
+            # Restart Docker containers
             docker-compose down
             docker-compose up --build -d
           EOF
