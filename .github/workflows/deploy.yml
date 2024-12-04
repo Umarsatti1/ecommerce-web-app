@@ -28,7 +28,7 @@ jobs:
       # Step 4: Build the Docker image
       - name: Build Docker Image
         run: |
-          docker build --no-cache -t ecommerce-app .  # Build the Docker image
+          docker build -t ecommerce-app .  # Build the Docker image
 
       # Step 5: Set up connection string for DB (stored in GitHub Secrets)
       - name: Set up DB connection string from GitHub Secrets
@@ -56,32 +56,23 @@ jobs:
 
           # SSH into the EC2 instance and deploy the application
           ssh ubuntu@$EC2_HOST << 'EOF'
-            # Clone the repository if it doesn't exist
-            if [ ! -d "/home/ubuntu/ecommerce-web-app" ]; then
-              git clone https://github.com/<your-username>/<your-repo-name>.git /home/ubuntu/ecommerce-web-app
-            fi
-
+            cd /home/ubuntu/ecommerce-web-app || git clone https://github.com/Umarsatti1/ecommerce-web-app.git /home/ubuntu/ecommerce-web-app
             cd /home/ubuntu/ecommerce-web-app
 
-            # Pull the latest changes
-            git fetch origin
-            git reset --hard origin/main
-            git clean -fd
+            # Fetch the latest code from GitHub (make sure we're on the main branch)
+            git pull origin main
 
-            # Use the DB connection string from the environment variable
-            export DB_CONNECTION_STRING="$DB_CONNECTION_STRING"
-
-            # Stop and remove old containers/images
+            # Stop and remove any existing containers
             sudo docker stop ecommerce-container || true
             sudo docker rm ecommerce-container || true
-            sudo docker image prune -f
 
-            # Build a fresh Docker image
+            # Prune unused Docker images
+            sudo docker image prune -af
+
+            # Build and run the new Docker container
             sudo docker build --no-cache -t ecommerce-app .
-
-            # Run the new container
             sudo docker run -d --name ecommerce-container -p 80:8080 ecommerce-app
 
-            # List running containers for verification
+            # Verify the running container
             sudo docker ps
           EOF
