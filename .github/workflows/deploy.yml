@@ -23,36 +23,42 @@ jobs:
         working-directory: frontend  # Frontend directory
         run: |
           npm install  # Install dependencies
-          npm run build  # Build the frontend (outputs to backend/wwwroot)
+          npm run build  # Build the frontend (outputs to frontend/dist)
 
-      # Step 4: Debug Backend wwwroot Contents
+      # Step 4: Copy Frontend Build to Backend wwwroot
+      - name: Copy Frontend Build to Backend wwwroot
+        run: |
+          mkdir -p backend/wwwroot
+          cp -r frontend/dist/* backend/wwwroot/
+
+      # Step 5: Verify Backend wwwroot Directory
       - name: Verify Backend wwwroot Directory
         run: |
           ls -la backend/wwwroot || echo "wwwroot folder not found or empty!"
 
-      # Step 5: Set up .NET for backend build
+      # Step 6: Set up .NET for backend build
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0'
 
-      # Step 6: Build and publish the backend
+      # Step 7: Build and publish the backend
       - name: Build Backend
         working-directory: backend
         run: |
           dotnet publish -c Release -o out
 
-      # Step 7: Set up DB Connection String
+      # Step 8: Set up DB Connection String
       - name: Set up DB Connection String
         run: |
           echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
 
-      # Step 8: Build Docker image
+      # Step 9: Build Docker image
       - name: Build Docker Image
         run: |
           docker build --no-cache -t ecommerce-app .
 
-      # Step 9: Deploy to EC2 instance
+      # Step 10: Deploy to EC2 instance
       - name: Deploy to EC2 Instance
         env:
           EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
