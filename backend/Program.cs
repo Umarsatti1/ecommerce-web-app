@@ -10,24 +10,25 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Linq;  // Add this to parse JSON
+using Newtonsoft.Json.Linq; // To parse JSON
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Fetch secrets from AWS Secrets Manager
-var dbSecret = await SecretsHelper.GetSecretStringAsync("/ecommerceapp/database-connection");
+// Updated: Fetch secrets from AWS Secrets Manager with fallback for local credentials
+var dbSecret = await SecretsHelper.GetSecretStringAsync("/ecommerceapp/database-connection", "us-east-1");
 
 // Parse the secret string to extract the connection string
 var dbSecretJson = JObject.Parse(dbSecret);
-var dbConnectionString = dbSecretJson["DefaultConnection"]?.ToString();  // Extract the connection string
+var dbConnectionString = dbSecretJson["DefaultConnection"]?.ToString(); // Extract the connection string
 
-// Log to verify the connection string (remove in production)
-Console.WriteLine($"Database Connection String: {dbConnectionString}"); 
+// Updated: Log connection string for debugging (optional, remove in production)
+Console.WriteLine($"Database Connection String: {dbConnectionString}");
 
-var stripeSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/stripe");
-var awsSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/aws");
+// Updated: Fetch Stripe and AWS secrets
+var stripeSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/stripe", "us-east-1");
+var awsSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/aws", "us-east-1");
 
-// Add secrets to configuration
+// Updated: Add secrets to the app configuration
 builder.Configuration["ConnectionStrings:DefaultConnection"] = dbConnectionString;
 builder.Configuration["StripeSettings:PublishableKey"] = stripeSecrets["PublishableKey"];
 builder.Configuration["StripeSettings:SecretKey"] = stripeSecrets["SecretKey"];
@@ -43,6 +44,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    // Configuring Swagger with JWT Bearer token support
     var jwtSecurityScheme = new OpenApiSecurityScheme
     {
         BearerFormat = "JWT",
@@ -76,17 +78,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost:3000")
+        builder.WithOrigins("http://localhost", "http://localhost:80", "http://frontend") // Frontend container and host
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();
     });
 });
 
+// Configure Identity and Authentication
 builder.Services.AddIdentityCore<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
@@ -115,8 +119,10 @@ builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
+// Build the application
 var app = builder.Build();
 
+// Middleware pipeline
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -133,7 +139,7 @@ app.UseStaticFiles();
 
 app.UseCors("CorsPolicy");
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -141,7 +147,7 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
-// Apply migrations and initialize the database
+// Apply database migrations and seed data
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
@@ -156,4 +162,5 @@ catch (Exception ex)
     logger.LogError(ex, "A problem occurred during migration");
 }
 
+// Run the application
 app.Run();

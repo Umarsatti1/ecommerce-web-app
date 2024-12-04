@@ -1,13 +1,16 @@
 using Amazon;
+using Amazon.Runtime;
 using Amazon.SecretsManager;
 using Amazon.SecretsManager.Model;
 using Newtonsoft.Json.Linq;
 
 public static class SecretsHelper
 {
+    // Method to get secret as a dictionary
     public static async Task<IDictionary<string, string>> GetSecretAsync(string secretName, string region = "us-east-1")
     {
-        IAmazonSecretsManager client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
+        // Updated to use FallbackCredentialsFactory to support local credentials and IMDS
+        var client = new AmazonSecretsManagerClient(FallbackCredentialsFactory.GetCredentials(), RegionEndpoint.GetBySystemName(region));
 
         var request = new GetSecretValueRequest
         {
@@ -21,6 +24,7 @@ public static class SecretsHelper
 
             if (response.SecretString != null)
             {
+                // Parse the secret string as JSON and return as a dictionary
                 return JObject.Parse(response.SecretString).ToObject<Dictionary<string, string>>();
             }
 
@@ -33,9 +37,11 @@ public static class SecretsHelper
         }
     }
 
+    // Method to get secret as a raw string
     public static async Task<string> GetSecretStringAsync(string secretName, string region = "us-east-1")
     {
-        IAmazonSecretsManager client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
+        // Updated to use FallbackCredentialsFactory to support local credentials and IMDS
+        var client = new AmazonSecretsManagerClient(FallbackCredentialsFactory.GetCredentials(), RegionEndpoint.GetBySystemName(region));
 
         var request = new GetSecretValueRequest
         {
