@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Install frontend dependencies and build the frontend
+      # Step 3: Build the frontend
       - name: Build Frontend
         working-directory: frontend  # Frontend directory
         run: |
@@ -42,21 +42,22 @@ jobs:
         run: |
           dotnet publish -c Release -o out
 
-      # Step 7: Build Docker image
+      # Step 7: Set up DB Connection String
+      - name: Set up DB Connection String
+        run: |
+          echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
+
+      # Step 8: Build Docker image
       - name: Build Docker Image
         run: |
           docker build --no-cache -t ecommerce-app .
-
-      # Step 8: Set up DB connection string from GitHub Secrets
-      - name: Set up DB connection string from GitHub Secrets
-        run: |
-          echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
 
       # Step 9: Deploy to EC2 instance
       - name: Deploy to EC2 Instance
         env:
           EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: |
           # Start the SSH agent
           eval $(ssh-agent -s)
@@ -89,9 +90,9 @@ jobs:
             sudo docker image prune -af
             sudo docker system prune -a -f
 
-            # Build and run the new Docker container
+            # Build and run the new Docker container with DB connection
             sudo docker build --no-cache -t ecommerce-app .
-            sudo docker run -d --name ecommerce-container -p 80:8080 ecommerce-app
+            sudo docker run -d --name ecommerce-container -p 80:8080 -e DB_CONNECTION_STRING=$DB_CONNECTION_STRING ecommerce-app
 
             # Verify the running container
             sudo docker ps
