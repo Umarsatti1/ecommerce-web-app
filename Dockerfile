@@ -1,24 +1,28 @@
-# Stage 1: Build frontend
-FROM node:20 AS frontend-build
-WORKDIR /app/frontend
-COPY frontend/ ./
-RUN npm install
-RUN npm run build
-
-# Stage 2: Build backend
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
+
+# Copy project files
 COPY *.sln ./
 COPY backend/*.csproj ./backend/
 RUN dotnet restore
-COPY backend/ ./backend/
-RUN dotnet publish -c Release -o /app/backend/out backend.csproj
 
-# Stage 3: Final image
+# Copy the remaining application files
+COPY backend/. ./backend/
+WORKDIR /app/backend
+
+# Build the application in Release mode
+RUN dotnet publish -c Release -o out
+
+# Use a lightweight runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=backend-build /app/backend/out ./
-COPY --from=frontend-build /app/frontend/dist ./wwwroot
-ENV DB_CONNECTION_STRING=$DB_CONNECTION_STRING
+COPY --from=build /app/backend/out ./
+
+# Copy the frontend dist (now present in backend/wwwroot)
+COPY backend/wwwroot /app/wwwroot
+
+# Expose the application port (8080)
 EXPOSE 8080
+
+# Start the application
 ENTRYPOINT ["dotnet", "backend.dll"]

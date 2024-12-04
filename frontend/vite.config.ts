@@ -4,10 +4,10 @@ import react from '@vitejs/plugin-react-swc'
 // https://vite.dev/config/
 export default defineConfig({
   build: {
-    outDir: './dist', // Build into frontend/dist
+    outDir: '../backend/wwwroot'
   },
-  server: {
-    port: 3000,
+  server:{
+    port: 3000
   },
   plugins: [react()],
 })
