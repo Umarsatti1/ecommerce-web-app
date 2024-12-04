@@ -1,4 +1,4 @@
-name: Manual Deployment for E-Commerce App with Frontend Build
+name: Manual Deployment of E-Commerce Application
 
 on:
   workflow_dispatch:  # Manually trigger the workflow from GitHub Actions UI
