@@ -57,13 +57,24 @@ jobs:
           # SSH into the EC2 instance and deploy the application
           ssh ubuntu@$EC2_HOST << 'EOF'
             cd /home/ubuntu/ecommerce-web-app
-            git pull origin main
+            
+            # Reset the local repository to match the remote main branch
+            git fetch origin
+            git reset --hard origin/main
 
             # Use the DB connection string from the environment variable
             export DB_CONNECTION_STRING="$DB_CONNECTION_STRING"
 
-            # Build and deploy the Docker container
-            sudo docker build -t ecommerce-app .
+            # Stop and remove the old container, if any
+            sudo docker stop ecommerce-container || true
+            sudo docker rm ecommerce-container || true
+
+            # Build a fresh Docker image (no cache)
+            sudo docker build --no-cache -t ecommerce-app .
+
+            # Run the new container
             sudo docker run -d --name ecommerce-container -p 80:8080 ecommerce-app
+
+            # List running containers for verification
             sudo docker ps
           EOF
