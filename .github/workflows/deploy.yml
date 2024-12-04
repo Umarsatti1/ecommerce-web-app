@@ -34,6 +34,10 @@ jobs:
       # Step 5: Build Docker Image
       - name: Build Docker Image
         run: |
+          # Copy the dist folder (frontend build) from the current directory to the backend directory
+          cp -r frontend/dist ./backend/wwwroot
+          
+          # Now build the Docker image
           docker build -t ecommerce-app .  # Build the Docker image
 
       # Step 6: Set up DB connection string from GitHub Secrets
