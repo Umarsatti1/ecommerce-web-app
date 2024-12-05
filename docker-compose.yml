@@ -21,10 +21,8 @@ services:
       - "5000:5000" # Map container's port 5000 to host's port 5000
     container_name: ecommerce-backend
     environment:
-      - AWS_REGION=us-east-1               # AWS Region for Secrets Manager
-      - ASPNETCORE_ENVIRONMENT=Development # Development environment
-    volumes:
-      - ~/.aws:/root/.aws:ro               # Mount AWS credentials for the backend
+      - ASPNETCORE_ENVIRONMENT=Production
+      - AWS_REGION=us-east-1
     networks:
       - app-network
 

@@ -1,49 +1,32 @@
 name: Deploy E-commerce App using CI/CD
 
 on:
-  workflow_dispatch: # Manually trigger the workflow from GitHub Actions UI
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-22.04
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up SSH Agent
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      # Step 3: Test SSH Connection
-      - name: Test SSH Connection
-        run: |
-          ssh -v -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} exit
-
-      # Step 4: Deploy the Application
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << EOF
-
             echo "Starting deployment on EC2 instance..."
 
-            # Ensure Docker and Docker Compose are installed
-            echo "Installing Docker and Docker Compose..."
             sudo apt-get update
             sudo apt-get install -y docker.io docker-compose
 
             echo "Cleaning up Docker resources..."
             docker system prune -af --volumes || true
 
-            echo "Adding user to Docker group..."
-            sudo usermod -aG docker $USER || true
-            newgrp docker || true
-
-            # Clone or update the repository
-            echo "Fetching the latest code..."
             if [ ! -d "~/ecommerce-web-app" ]; then
               git clone -b test https://github.com/Umarsatti1/ecommerce-web-app.git ecommerce-web-app
             fi
@@ -57,10 +40,7 @@ jobs:
             echo "AWS_REGION=${{ secrets.AWS_REGION }}" > .env
             echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
 
-            echo "Stopping existing containers..."
             docker-compose down || true
-
-            echo "Building and starting containers..."
             docker-compose up --build -d
 
             echo "Deployment complete!"

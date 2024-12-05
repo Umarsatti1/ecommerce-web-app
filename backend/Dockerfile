@@ -1,17 +1,14 @@
-# Use the official .NET SDK image for building the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY E-Commerce.sln .              
-COPY backend/*.csproj ./backend/   
-RUN dotnet restore ./backend
-COPY backend/ ./backend/           
+COPY ["backend/backend.csproj", "./"]
+RUN dotnet restore "./backend.csproj"
+COPY . .
 WORKDIR /src/backend
-RUN dotnet publish -c Release -o /app
+RUN dotnet publish -c Release -o /app/publish
 
-# Use the official .NET runtime image for running the application
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=build /app .
-EXPOSE 5000
-ENV ASPNETCORE_URLS=http://+:5000
+COPY --from=build /app/publish .
+# Copy the wwwroot directory
+COPY backend/wwwroot ./wwwroot
 CMD ["dotnet", "backend.dll"]
