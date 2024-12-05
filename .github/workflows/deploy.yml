@@ -30,6 +30,7 @@ jobs:
 
             # Prune docker
             docker system prune -af
+            sudo apt-get clean
             docker system prune -f
             docker container prune -f
             docker image prune -af
