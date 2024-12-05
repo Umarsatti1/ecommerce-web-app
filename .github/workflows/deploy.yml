@@ -27,6 +27,15 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << EOF
+
+            # Prune docker
+            docker system prune -af
+            docker system prune -f
+            docker container prune -f
+            docker image prune -af
+            docker volume prune -f
+            docker network prune -f
+
             # Add user to the Docker group
             sudo usermod -aG docker ubuntu
 
