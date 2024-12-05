@@ -21,8 +21,10 @@ services:
       - "5000:5000" # Map container's port 5000 to host's port 5000
     container_name: ecommerce-backend
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
       - AWS_REGION=us-east-1
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - ~/.aws:/root/.aws:ro
     networks:
       - app-network
 

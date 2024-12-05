@@ -9,6 +9,6 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-# Copy the wwwroot directory
 COPY backend/wwwroot ./wwwroot
+ENV ASPNETCORE_URLS=http://+:5000
 CMD ["dotnet", "backend.dll"]
