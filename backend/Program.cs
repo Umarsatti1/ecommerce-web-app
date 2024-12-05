@@ -83,7 +83,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost", "http://localhost:80", "http://frontend") // Frontend container and host
+        builder.WithOrigins("http://localhost", "http://localhost:80", "http://frontend", "http://35.174.165.99") // Frontend container and host
                .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();
