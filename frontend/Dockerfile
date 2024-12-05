@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . ./
+# Add the environment file explicitly
+COPY .env .env
 RUN npm run build
 
 # Stage 2: Serve the built React app
