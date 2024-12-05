@@ -33,6 +33,7 @@ jobs:
             docker system prune -f
             docker container prune -f
             docker image prune -af
+            docker system prune -af --volumes
             docker volume prune -f
             docker network prune -f
 
