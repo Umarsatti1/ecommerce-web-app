@@ -5,8 +5,20 @@
       "PackagePath": "staticwebassets\\assets\\index-BzInkX1V.css"
     },
     {
+      "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-CeLoieu0.js",
+      "PackagePath": "staticwebassets\\assets\\index-CeLoieu0.js"
+    },
+    {
       "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-DeT5wBTw.js",
       "PackagePath": "staticwebassets\\assets\\index-DeT5wBTw.js"
+    },
+    {
+      "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-XVatmFew.js",
+      "PackagePath": "staticwebassets\\assets\\index-XVatmFew.js"
+    },
+    {
+      "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-vGJEFvkX.css",
+      "PackagePath": "staticwebassets\\assets\\index-vGJEFvkX.css"
     },
     {
       "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-xvcKfVA_.js",
@@ -395,6 +407,10 @@
     {
       "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\images\\carousel-3.jpg",
       "PackagePath": "staticwebassets\\images\\carousel-3.jpg"
+    },
+    {
+      "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\images\\emptycart.png",
+      "PackagePath": "staticwebassets\\images\\emptycart.png"
     },
     {
       "Id": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\images\\products\\adidas-duffel.png",
