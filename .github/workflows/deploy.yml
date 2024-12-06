@@ -74,9 +74,19 @@ jobs:
             sudo docker image prune -af
             sudo docker system prune -a -f
 
-            # Build and run the new Docker container
+            # Build and run the new Docker container with environment variables
             sudo docker build --no-cache -t ecommerce-app .  # Ensure build from scratch
-            sudo docker run -d --name ecommerce-container -p 80:8080 ecommerce-app
+
+            # Run the container and pass environment variables dynamically
+            sudo docker run -d \
+              --name ecommerce-container \
+              -p 80:8080 \
+              -e DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }} \
+              -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+              -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+              -e AWS_REGION=${{ secrets.AWS_REGION }} \
+              -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
+              ecommerce-app
 
             # Verify the running container
             sudo docker ps
