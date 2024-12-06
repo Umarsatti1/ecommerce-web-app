@@ -13,8 +13,12 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add configuration from environment variables
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables(); // Load environment variables
 
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddEndpointsApiExplorer();
@@ -48,7 +52,7 @@ builder.Services.AddSwaggerGen(c =>
 // Configure Entity Framework with MySQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
+        builder.Configuration["ConnectionStrings:DefaultConnection"] ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
         new MySqlServerVersion(new Version(8, 0, 39))
     )
 );
@@ -71,6 +75,7 @@ builder.Services.AddIdentityCore<User>(opt =>
 })
     .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt => 
     {
@@ -84,6 +89,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
+
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
@@ -93,8 +99,15 @@ builder.Services.AddAWSService<IAmazonS3>();
 
 builder.Services.AddScoped<ImageService>();
 
-// Configure AWS options from appsettings.json
-builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+// Configure AWS options using environment variables
+builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
+{
+    Credentials = new Amazon.Runtime.BasicAWSCredentials(
+        builder.Configuration["AWS:AccessKey"], 
+        builder.Configuration["AWS:SecretKey"]
+    ),
+    Region = Amazon.RegionEndpoint.GetBySystemName(builder.Configuration["AWS:Region"])
+});
 
 var app = builder.Build();
 

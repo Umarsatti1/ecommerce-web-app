@@ -1,3 +1,5 @@
+**/.env
+
 # Ignore logs
 *.log
 **/logs/
