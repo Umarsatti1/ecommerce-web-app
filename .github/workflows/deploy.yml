@@ -30,14 +30,10 @@ jobs:
         run: |
           docker build -t ecommerce-app .  # Build the Docker image
 
-      # Step 5: Set environment variables from GitHub Secrets
-      - name: Set environment variables
+      # Step 5: Set up DB connection string from GitHub Secrets
+      - name: Set up DB connection string from GitHub Secrets
         run: |
           echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> $GITHUB_ENV
-          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> $GITHUB_ENV
 
       # Step 6: Deploy to EC2 instance
       - name: Deploy to EC2 Instance
@@ -74,19 +70,9 @@ jobs:
             sudo docker image prune -af
             sudo docker system prune -a -f
 
-            # Build and run the new Docker container with environment variables
-            sudo docker build --no-cache -t ecommerce-app .  # Ensure build from scratch
-
-            # Run the container and pass environment variables dynamically
-            sudo docker run -d \
-              --name ecommerce-container \
-              -p 80:8080 \
-              -e DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }} \
-              -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
-              -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-              -e AWS_REGION=${{ secrets.AWS_REGION }} \
-              -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
-              ecommerce-app
+            # Build and run the new Docker container
+            sudo docker build --no-cache -t ecommerce-app .
+            sudo docker run -d --name ecommerce-container -p 80:8080 ecommerce-app
 
             # Verify the running container
             sudo docker ps
