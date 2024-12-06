@@ -1,5 +1,4 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:730335208305:task-definition/ecommerce-app-task:1",
     "containerDefinitions": [
         {
             "name": "ecommerce-app-container",
@@ -9,30 +8,48 @@
             "memoryReservation": 1024,
             "portMappings": [
                 {
+                    "name": "container-port-protocol",
                     "containerPort": 8080,
                     "hostPort": 8080,
-                    "protocol": "tcp"
+                    "protocol": "tcp",
+                    "appProtocol": "http"
                 }
             ],
             "essential": true,
             "environment": [
                 {
-                    "name": "DefaultConnection",
-                    "value": "server=${{ secrets.DB_SERVER }};port=${{ secrets.DB_PORT }};database=${{ secrets.DB_NAME }};user=${{ secrets.DB_USER }};password=${{ secrets.DB_PASSWORD }}"
-                },
-                {
-                    "name": "PublishableKey",
-                    "value": "${{ secrets.STRIPE_PUBLISHABLE_KEY }}"
-                },
-                {
                     "name": "SecretKey",
-                    "value": "${{ secrets.STRIPE_SECRET_KEY }}"
+                    "value": "${{ secrets.AWS_SECRET_KEY }}"
+                },
+                {
+                    "name": "DefaultConnection",
+                    "value": "${{ secrets.AWS_DB_CONNECTION }}"
                 },
                 {
                     "name": "BucketName",
-                    "value": "${{ secrets.S3_BUCKET_NAME }}"
+                    "value": "${{ secrets.AWS_BUCKET_NAME }}"
+                },
+                {
+                    "name": "Region",
+                    "value": "${{ secrets.AWS_REGION }}"
+                },
+                {
+                    "name": "PublishableKey",
+                    "value": "${{ secrets.AWS_PUBLISHABLE_KEY }}"
+                },
+                {
+                    "name": "AccessKey",
+                    "value": "${{ secrets.AWS_ACCESS_KEY }}"
+                },
+                {
+                    "name": "WhSecret",
+                    "value": "${{ secrets.AWS_WH_SECRET }}"
                 }
             ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
@@ -42,14 +59,61 @@
                     "max-buffer-size": "25m",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
-                }
-            }
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
         }
     ],
     "family": "ecommerce-app-task",
     "taskRoleArn": "arn:aws:iam::730335208305:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::730335208305:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "requiresAttributes": [
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "ecs.capability.extensible-ephemeral-storage"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
     "requiresCompatibilities": [
         "FARGATE"
     ],
@@ -62,6 +126,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "volumes": [],
-    "status": "ACTIVE"
+    "registeredAt": "2024-12-06T19:24:59.491Z",
+    "registeredBy": "arn:aws:iam::730335208305:user/iamadmin",
+    "tags": []
 }
