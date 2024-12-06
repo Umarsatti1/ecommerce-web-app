@@ -17,7 +17,7 @@ namespace backend.Services
             _bucketName = config["AWS:BucketName"];
             if (string.IsNullOrEmpty(_bucketName))
             {
-                throw new InvalidOperationException("S3 BucketName is not configured in appsettings.json.");
+                throw new InvalidOperationException("S3 BucketName is not configured. Ensure it is set in environment variables or appsettings.json.");
             }
         }
 
@@ -60,7 +60,6 @@ namespace backend.Services
             }
         }
 
-
         public async Task DeleteImageAsync(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -76,16 +75,16 @@ namespace backend.Services
 
             try
             {
+                Console.WriteLine($"Attempting to delete file with key: {key} from bucket: {_bucketName}");
                 await _s3Client.DeleteObjectAsync(deleteRequest);
+                Console.WriteLine("File deleted successfully.");
             }
             catch (AmazonS3Exception ex)
             {
-                // Handle AWS-specific exceptions
                 throw new InvalidOperationException($"Error deleting file from S3: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
-                // Handle general exceptions
                 throw new InvalidOperationException($"An unexpected error occurred while deleting the file: {ex.Message}", ex);
             }
         }

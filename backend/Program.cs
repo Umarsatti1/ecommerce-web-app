@@ -117,6 +117,17 @@ builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOpt
     )
 });
 
+// Log S3 BucketName configuration for debugging
+var bucketName = builder.Configuration["AWS:BucketName"];
+if (string.IsNullOrEmpty(bucketName))
+{
+    Console.WriteLine("Warning: AWS S3 BucketName is not configured.");
+}
+else
+{
+    Console.WriteLine($"AWS S3 BucketName: {bucketName}");
+}
+
 var app = builder.Build();
 
 // Middleware configuration
