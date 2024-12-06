@@ -24,9 +24,6 @@ COPY --from=build /app/backend/out ./
 # Copy the frontend dist (now present in backend/wwwroot)
 COPY backend/wwwroot /app/wwwroot
 
-# Copy the .env file into the container
-COPY .env /app/.env
-
 # Expose the application port (8080)
 EXPOSE 8080
 
