@@ -76,6 +76,6 @@
     "memory": "3072",
     "volumes": [],
     "ephemeralStorage": {
-        "sizeInGiB": 20
+        "sizeInGiB": 21
     }
 }
