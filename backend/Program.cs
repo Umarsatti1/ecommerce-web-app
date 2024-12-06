@@ -12,18 +12,49 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Linq;  // Add this to parse JSON
 
+// Import the DotNetEnv package correctly
+using DotNetEnv;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Determine if running in Docker by checking an environment variable
+var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+
+// Load environment variables based on the runtime environment
+if (isDocker)
+{
+    Console.WriteLine("Running in Docker... loading environment variables from /app/.env");
+    // In Docker, load .env from the /app/.env file
+    Env.Load("/app/.env");  // Docker path
+}
+else
+{
+    Console.WriteLine("Running locally... loading environment variables from ../.env");
+    // Locally, load .env from the project root (parent directory)
+    Env.Load("../.env");  // Local path
+}
+
+// Retrieve required environment variables
+var secretName = Environment.GetEnvironmentVariable("SECRET_NAME");
+var region = Environment.GetEnvironmentVariable("AWS_REGION");
+
+// Validate environment variables
+if (string.IsNullOrEmpty(secretName) || string.IsNullOrEmpty(region))
+{
+    throw new InvalidOperationException("SECRET_NAME or AWS_REGION is not configured.");
+}
+
 // Fetch secrets from AWS Secrets Manager
-var dbSecret = await SecretsHelper.GetSecretStringAsync("/ecommerceapp/database-connection");
+var dbSecret = await SecretsHelper.GetSecretStringAsync(secretName, region);
 
 // Parse the secret string to extract the connection string
 var dbSecretJson = JObject.Parse(dbSecret);
 var dbConnectionString = dbSecretJson["DefaultConnection"]?.ToString();  // Extract the connection string
 
 // Log to verify the connection string (remove in production)
-Console.WriteLine($"Database Connection String: {dbConnectionString}"); 
+Console.WriteLine($"Database Connection String: {dbConnectionString}");
 
+// Additional secrets (e.g., Stripe, AWS)
 var stripeSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/stripe");
 var awsSecrets = await SecretsHelper.GetSecretAsync("/ecommerceapp/aws");
 

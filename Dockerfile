@@ -1,3 +1,4 @@
+# Stage 1: Build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
@@ -13,13 +14,18 @@ WORKDIR /app/backend
 # Build the application in Release mode
 RUN dotnet publish -c Release -o out
 
-# Use a lightweight runtime image
+# Stage 2: Use a lightweight runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
+
+# Copy the published output from the build stage
 COPY --from=build /app/backend/out ./
 
 # Copy the frontend dist (now present in backend/wwwroot)
 COPY backend/wwwroot /app/wwwroot
+
+# Copy the .env file into the container
+COPY .env /app/.env
 
 # Expose the application port (8080)
 EXPOSE 8080

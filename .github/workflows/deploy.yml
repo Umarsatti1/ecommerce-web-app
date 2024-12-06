@@ -30,10 +30,12 @@ jobs:
         run: |
           docker build -t ecommerce-app .  # Build the Docker image
 
-      # Step 5: Set up DB connection string from GitHub Secrets
-      - name: Set up DB connection string from GitHub Secrets
+      # Step 5: Create .env file from GitHub Secrets
+      - name: Create .env file from GitHub Secrets
         run: |
-          echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
+          echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" > .env
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
 
       # Step 6: Deploy to EC2 instance
       - name: Deploy to EC2 Instance
