@@ -34,7 +34,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          region: ${{ secrets.AWS_REGION }} 
+          region: ${{ secrets.AWS_REGION }}
 
       # Step 4: Build the Docker image
       - name: Build Docker image
@@ -55,7 +55,7 @@ jobs:
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ecs-task-definition.json
+          task-definition: ./ecs/ecs-task-definition.json  # Updated to use the correct path
           service: ${{ secrets.AWS_ECS_SERVICE_NAME }}
           cluster: ${{ secrets.AWS_ECS_CLUSTER_NAME }}
           wait-for-service-stability: true

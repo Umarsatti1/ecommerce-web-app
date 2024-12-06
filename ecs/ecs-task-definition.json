@@ -1,0 +1,67 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:730335208305:task-definition/ecommerce-app-task:1",
+    "containerDefinitions": [
+        {
+            "name": "ecommerce-app-container",
+            "image": "730335208305.dkr.ecr.us-east-1.amazonaws.com/ecommerce-app:latest",
+            "cpu": 1024,
+            "memory": 3072,
+            "memoryReservation": 1024,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "DefaultConnection",
+                    "value": "server=${{ secrets.DB_SERVER }};port=${{ secrets.DB_PORT }};database=${{ secrets.DB_NAME }};user=${{ secrets.DB_USER }};password=${{ secrets.DB_PASSWORD }}"
+                },
+                {
+                    "name": "PublishableKey",
+                    "value": "${{ secrets.STRIPE_PUBLISHABLE_KEY }}"
+                },
+                {
+                    "name": "SecretKey",
+                    "value": "${{ secrets.STRIPE_SECRET_KEY }}"
+                },
+                {
+                    "name": "BucketName",
+                    "value": "${{ secrets.S3_BUCKET_NAME }}"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/ecommerce-app-task",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "family": "ecommerce-app-task",
+    "taskRoleArn": "arn:aws:iam::730335208305:role/ecsTaskExecutionRole",
+    "executionRoleArn": "arn:aws:iam::730335208305:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "ephemeralStorage": {
+        "sizeInGiB": 21
+    },
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "volumes": [],
+    "status": "ACTIVE"
+}
