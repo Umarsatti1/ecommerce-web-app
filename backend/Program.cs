@@ -13,13 +13,14 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add configuration from environment variables and environment-specific JSON
+// Determine environment
 var environment = builder.Environment.EnvironmentName;
 
+// Add configuration sources
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Base configuration
     .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true) // Environment-specific overrides
-    .AddEnvironmentVariables(); // Load environment variables
+    .AddEnvironmentVariables(); // Environment variables override JSON files
 
 Console.WriteLine($"Running in environment: {environment}");
 
@@ -57,12 +58,13 @@ builder.Services.AddSwaggerGen(c =>
 // Configure Entity Framework with MySQL
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
-        builder.Configuration["ConnectionStrings:DefaultConnection"] ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
+        builder.Configuration.GetConnectionString("DefaultConnection") 
+        ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
         new MySqlServerVersion(new Version(8, 0, 39))
     )
 );
 
-// Configure CORS policy to allow requests from frontend
+// Configure CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
@@ -90,8 +92,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
-                GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
 
@@ -101,17 +103,18 @@ builder.Services.AddScoped<PaymentService>();
 
 // Add AWS S3 Service registration
 builder.Services.AddAWSService<IAmazonS3>();
-
 builder.Services.AddScoped<ImageService>();
 
-// Configure AWS options
+// Configure AWS options with fallback
 builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
 {
     Credentials = new Amazon.Runtime.BasicAWSCredentials(
         builder.Configuration["AWS:AccessKey"], 
         builder.Configuration["AWS:SecretKey"]
     ),
-    Region = Amazon.RegionEndpoint.GetBySystemName(builder.Configuration["AWS:Region"])
+    Region = Amazon.RegionEndpoint.GetBySystemName(
+        builder.Configuration["AWS:Region"] ?? "us-east-1" // Fallback to default region
+    )
 });
 
 var app = builder.Build();
@@ -131,7 +134,7 @@ if (app.Environment.IsDevelopment())
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Enable CORS using the defined policy
+// Enable CORS
 app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
@@ -143,18 +146,20 @@ app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
 // Database migration and initialization
-var scope = app.Services.CreateScope();
-var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-try
+using (var scope = app.Services.CreateScope())
 {
-    await context.Database.MigrateAsync();
-    await DbInitializer.Initialize(context, userManager);
-}
-catch (Exception ex)
-{
-    logger.LogError(ex, "A problem occurred during migration");
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        await context.Database.MigrateAsync();
+        await DbInitializer.Initialize(context, userManager);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "A problem occurred during migration");
+    }
 }
 
 app.Run();
