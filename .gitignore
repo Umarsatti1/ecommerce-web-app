@@ -1,4 +1,5 @@
 **/.env
+/backend/appsettings.Development.json
 
 # Ignore logs
 *.log

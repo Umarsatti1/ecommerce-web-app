@@ -519,3 +519,5 @@ C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-ap
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\obj\Debug\net8.0\ref\backend.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\backend.staticwebassets.runtime.json
+C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\DotNetEnv.dll
+C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\Sprache.dll

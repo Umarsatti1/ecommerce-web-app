@@ -13,12 +13,17 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add configuration from environment variables
+// Add configuration from environment variables and environment-specific JSON
+var environment = builder.Environment.EnvironmentName;
+
 builder.Configuration
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Base configuration
+    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true) // Environment-specific overrides
     .AddEnvironmentVariables(); // Load environment variables
 
-// Add services to the container.
+Console.WriteLine($"Running in environment: {environment}");
+
+// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddEndpointsApiExplorer();
@@ -62,14 +67,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // frontend URL
+        builder.WithOrigins("http://localhost:3000") // Frontend URL
                .AllowAnyHeader()
                .AllowAnyMethod()
-               .AllowCredentials(); // necessary for cookies
+               .AllowCredentials(); // Necessary for cookies
     });
 });
 
-builder.Services.AddIdentityCore<User>(opt => 
+builder.Services.AddIdentityCore<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
 })
@@ -77,7 +82,7 @@ builder.Services.AddIdentityCore<User>(opt =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opt => 
+    .AddJwtBearer(opt =>
     {
         opt.TokenValidationParameters = new TokenValidationParameters
         {
@@ -99,7 +104,7 @@ builder.Services.AddAWSService<IAmazonS3>();
 
 builder.Services.AddScoped<ImageService>();
 
-// Configure AWS options using environment variables
+// Configure AWS options
 builder.Services.AddDefaultAWSOptions(new Amazon.Extensions.NETCore.Setup.AWSOptions
 {
     Credentials = new Amazon.Runtime.BasicAWSCredentials(

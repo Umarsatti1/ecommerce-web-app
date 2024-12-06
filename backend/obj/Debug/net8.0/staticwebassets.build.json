@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "gibeRfhCaVa6foQyjkAr5WqQmLJECf4Qm5nH9k1SI/g=",
+  "Hash": "9WsdG4s3zAl857PfAxVk1i/b52AD/0tpumyzIo9i+rQ=",
   "Source": "backend",
   "BasePath": "_content/backend",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-0gGIXAiC.js",
+      "SourceId": "backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\",
+      "BasePath": "_content/backend",
+      "RelativePath": "assets/index-0gGIXAiC.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\index-0gGIXAiC.js"
+    },
     {
       "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-B8aPcppv.js",
       "SourceId": "backend",
@@ -300,6 +319,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\index-O5kjDdhH.css"
+    },
+    {
+      "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-xvcKfVA_.js",
+      "SourceId": "backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\",
+      "BasePath": "_content/backend",
+      "RelativePath": "assets/index-xvcKfVA_.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\index-xvcKfVA_.js"
     },
     {
       "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\open-sans-cyrillic-300-normal-DHmBZ-tM.woff2",
