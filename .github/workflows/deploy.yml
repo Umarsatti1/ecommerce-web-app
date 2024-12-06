@@ -3,7 +3,13 @@ name: Deploy to AWS ECS
 on:
   push:
     branches:
-      - product-changes # Trigger deployment on push to the product-changes branch
+      - product-changes  # Trigger deployment on push to the product-changes branch
+  workflow_dispatch:  # This allows you to manually trigger the workflow from the GitHub UI
+    inputs:
+      deploy:
+        description: 'Deploy the application'
+        required: true
+        default: 'yes'
 
 jobs:
   deploy:
@@ -15,27 +21,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Log in to AWS ECR
+      # Step 2: Set up AWS credentials
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Log in to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          region: ${{ secrets.AWS_REGION }} 
 
-      # Step 3: Build the Docker image
+      # Step 4: Build the Docker image
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.AWS_ECR_REPO_NAME }}:latest .
 
-      # Step 4: Tag the Docker image for ECR
+      # Step 5: Tag the Docker image for ECR
       - name: Tag Docker image
         run: |
           docker tag ${{ secrets.AWS_ECR_REPO_NAME }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_NAME }}:latest
 
-      # Step 5: Push Docker image to ECR
+      # Step 6: Push Docker image to ECR
       - name: Push to Amazon ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.AWS_ECR_REPO_NAME }}:latest
 
-      # Step 6: Deploy the image to ECS
+      # Step 7: Deploy the image to ECS
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
