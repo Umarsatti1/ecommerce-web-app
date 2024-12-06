@@ -69,5 +69,13 @@
     "taskRoleArn": "arn:aws:iam::730335208305:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::730335208305:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "volumes": []
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "volumes": [],
+    "ephemeralStorage": {
+        "sizeInGiB": 20
+    }
 }
