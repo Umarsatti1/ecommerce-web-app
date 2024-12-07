@@ -8,50 +8,59 @@
             "memoryReservation": 1024,
             "portMappings": [
                 {
+                    "name": "container-port-protocol",
                     "containerPort": 8080,
                     "hostPort": 8080,
-                    "protocol": "tcp"
+                    "protocol": "tcp",
+                    "appProtocol": "http"
                 }
             ],
             "essential": true,
             "environment": [
                 {
-                    "name": "AWS__SecretKey",
+                    "name": "SecretKey",
                     "value": "${{ secrets.AWS_SECRET_KEY }}"
                 },
                 {
-                    "name": "ConnectionStrings__DefaultConnection",
+                    "name": "DefaultConnection",
                     "value": "${{ secrets.AWS_DB_CONNECTION }}"
                 },
                 {
-                    "name": "AWS__BucketName",
+                    "name": "BucketName",
                     "value": "${{ secrets.AWS_BUCKET_NAME }}"
                 },
                 {
-                    "name": "AWS__Region",
+                    "name": "Region",
                     "value": "${{ secrets.AWS_REGION }}"
                 },
                 {
-                    "name": "StripeSettings__PublishableKey",
+                    "name": "PublishableKey",
                     "value": "${{ secrets.AWS_PUBLISHABLE_KEY }}"
                 },
                 {
-                    "name": "AWS__AccessKey",
+                    "name": "AccessKey",
                     "value": "${{ secrets.AWS_ACCESS_KEY }}"
                 },
                 {
-                    "name": "StripeSettings__WhSecret",
+                    "name": "WhSecret",
                     "value": "${{ secrets.AWS_WH_SECRET }}"
                 }
             ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-group": "/ecs/ecommerce-app-task",
-                    "awslogs-region": "${{ secrets.AWS_REGION }}",
+                    "mode": "non-blocking",
                     "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
-                }
+                },
+                "secretOptions": []
             },
             "systemControls": []
         }
@@ -65,6 +74,7 @@
     ],
     "cpu": "1024",
     "memory": "3072",
+    "volumes": [],
     "ephemeralStorage": {
         "sizeInGiB": 21
     }

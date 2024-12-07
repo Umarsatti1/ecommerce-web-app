@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "9WsdG4s3zAl857PfAxVk1i/b52AD/0tpumyzIo9i+rQ=",
+  "Hash": "jZGoRbrme8X/c2hw14mmpQcyG8pbSqew9BV9Wn1fe2o=",
   "Source": "backend",
   "BasePath": "_content/backend",
   "Mode": "Default",
@@ -224,6 +224,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\index-DcuO3qAw.js"
+    },
+    {
+      "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-Dh9hjTr-.js",
+      "SourceId": "backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\",
+      "BasePath": "_content/backend",
+      "RelativePath": "assets/index-Dh9hjTr-.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\index-Dh9hjTr-.js"
     },
     {
       "Identity": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\wwwroot\\assets\\index-DioGrOwK.js",
