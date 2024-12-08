@@ -1,0 +1,79 @@
+name: Deploying E-Commerce App using CI/CD
+
+on:
+  workflow_dispatch:  # Manually trigger the workflow from GitHub Actions UI
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-22.04  # GitHub-hosted runner for building
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js (for frontend build)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # Step 3: Install frontend dependencies and build the frontend
+      - name: Build Frontend
+        working-directory: frontend  # Set working directory to frontend
+        run: |
+          npm install  # Install dependencies
+          npm run build  # Build the frontend
+
+      # Step 4: Build Docker image
+      - name: Build Docker Image
+        run: |
+          docker build -t ecommerce-app .  # Build the Docker image
+
+      # Step 5: Set up DB connection string from GitHub Secrets
+      - name: Set up DB connection string from GitHub Secrets
+        run: |
+          echo "DB_CONNECTION_STRING=${{ secrets.DB_CONNECTION_STRING }}" >> $GITHUB_ENV
+
+      # Step 6: Deploy to EC2 instance
+      - name: Deploy to EC2 Instance
+        env:
+          EC2_PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}  # Securely store the EC2 private key in GitHub Secrets
+          EC2_HOST: ${{ secrets.EC2_HOST }}  # EC2 instance public IP or DNS name
+        run: |
+          # Start the SSH agent
+          eval $(ssh-agent -s)
+          
+          # Remove problematic carriage returns and load the key
+          echo "$EC2_PRIVATE_KEY" | sed 's/\r$//' | ssh-add - 
+
+          # Ensure the .ssh directory exists with correct permissions
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          # Skip host key checking for convenience
+          echo -e "Host $EC2_HOST\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+          # SSH into the EC2 instance and deploy the application
+          ssh ubuntu@$EC2_HOST << 'EOF'
+            cd /home/ubuntu/ecommerce-web-app || git clone https://github.com/Umarsatti1/ecommerce-web-app.git /home/ubuntu/ecommerce-web-app
+            cd /home/ubuntu/ecommerce-web-app
+
+            # Fetch the latest code from GitHub (make sure we're on the main branch)
+            git pull origin main
+
+            # Stop and remove any existing containers
+            sudo docker stop ecommerce-container || true
+            sudo docker rm ecommerce-container || true
+
+            # Prune unused Docker images and system
+            sudo docker image prune -af
+            sudo docker system prune -a -f
+
+            # Build and run the new Docker container
+            sudo docker build --no-cache -t ecommerce-app .
+            sudo docker run -d --name ecommerce-container -p 80:8080 ecommerce-app
+
+            # Verify the running container
+            sudo docker ps
+          EOF
