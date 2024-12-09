@@ -12,6 +12,7 @@
           "AWSSDK.S3": "3.7.105.1",
           "AWSSDK.SQS": "3.7.400.59",
           "AWSSDK.SecretsManager": "3.7.400.59",
+          "AWSSDK.SimpleNotificationService": "3.7.400.59",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "CloudinaryDotNet": "1.26.2",
           "DotNetEnv": "3.1.1",
@@ -91,6 +92,17 @@
         },
         "runtime": {
           "lib/net8.0/AWSSDK.SecretsManager.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.400.59"
+          }
+        }
+      },
+      "AWSSDK.SimpleNotificationService/3.7.400.59": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.400.59"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.SimpleNotificationService.dll": {
             "assemblyVersion": "3.3.0.0",
             "fileVersion": "3.7.400.59"
           }
@@ -1959,6 +1971,13 @@
       "sha512": "sha512-HNpVriR9BqGEaSM4sObyX03QqOQifb2X/4syHF9Ij2wqID9eWK5IGlUry2+68rQLnL56JRf4UME09anvDS3YQw==",
       "path": "awssdk.secretsmanager/3.7.400.59",
       "hashPath": "awssdk.secretsmanager.3.7.400.59.nupkg.sha512"
+    },
+    "AWSSDK.SimpleNotificationService/3.7.400.59": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7xYFU13I3f04aT/S/2/BymwFeeBr4PFTfmq3oncOhWufIbMwVizUyG2QrEvLTe3quKl+/75SPd6kzgb2n9QiYw==",
+      "path": "awssdk.simplenotificationservice/3.7.400.59",
+      "hashPath": "awssdk.simplenotificationservice.3.7.400.59.nupkg.sha512"
     },
     "AWSSDK.SQS/3.7.400.59": {
       "type": "package",
