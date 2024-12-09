@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { User, ShoppingBag, LogOut, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store/configureStore";
+import { useState } from "react";
 import { signOut } from "../../features/account/accountSlice";
 import { clearCart } from "../../features/cart/cartSlice";
-import { Link } from "react-router-dom";
-import { User, ShoppingBag, LogOut } from "lucide-react";
 
 export default function SignedInMenu() {
   const dispatch = useAppDispatch();
@@ -17,7 +17,6 @@ export default function SignedInMenu() {
 
   return (
     <div className="relative">
-      {/* Trigger Button */}
       <button
         onClick={() => setDropdownOpen((prev) => !prev)}
         className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-black bg-white border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-300"
@@ -25,14 +24,12 @@ export default function SignedInMenu() {
         <span>{user?.email}</span>
       </button>
 
-      {/* Dropdown Menu */}
       {dropdownOpen && (
         <div
           className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50"
           onMouseLeave={() => setDropdownOpen(false)}
         >
           <ul className="py-1">
-            {/* Profile Settings */}
             <li>
               <Link
                 to="/profile-settings"
@@ -43,7 +40,6 @@ export default function SignedInMenu() {
                 Profile
               </Link>
             </li>
-            {/* My Orders */}
             <li>
               <Link
                 to="/orders"
@@ -54,7 +50,18 @@ export default function SignedInMenu() {
                 My Orders
               </Link>
             </li>
-            {/* Logout */}
+            {user?.roles?.includes("Admin") && (
+              <li>
+                <Link
+                  to="/all-orders"
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  <FileText className="w-4 h-4 mr-2 text-gray-500" />
+                  All Orders
+                </Link>
+              </li>
+            )}
             <li>
               <button
                 onClick={() => {

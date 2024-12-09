@@ -43,7 +43,7 @@ namespace backend.Controllers
                 .RetrieveCartWithItems(User.Identity.Name)
                 .FirstOrDefaultAsync();
 
-            if (cart == null) return BadRequest(new ProblemDetails{Title = "Could not locate cart"});
+            if (cart == null) return BadRequest(new ProblemDetails { Title = "Could not locate cart" });
 
             var items = new List<OrderItem>();
 
@@ -100,14 +100,37 @@ namespace backend.Controllers
                     Country = orderDto.ShippingAddress.Country
                 };
                 user.Address = address;
-                //_context.Update(user);
             }
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return CreatedAtRoute("GetOrder", new {id = order.Id}, order.Id);
+            if (result) return CreatedAtRoute("GetOrder", new { id = order.Id }, order.Id);
 
             return BadRequest("Problem creating order");
+        }
+
+        // Admin Role: Fetch all orders
+        [Authorize(Roles = "Admin")]
+        [HttpGet("all-orders")]
+        public async Task<ActionResult<List<OrderDto>>> GetAllOrders()
+        {
+            try
+            {
+                var orders = await _context.Orders
+                    .ProjectOrderToOrderDto()
+                    .ToListAsync();
+
+                if (orders == null || !orders.Any())
+                {
+                    return NotFound(new { Message = "No orders found." });
+                }
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred while fetching orders.", Details = ex.Message });
+            }
         }
     }
 }

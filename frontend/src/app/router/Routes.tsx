@@ -19,6 +19,7 @@ import ProfileSettings from "../../features/account/ProfileSettings";
 import BrandProductsPage from "../../features/catalog/BrandsProductPage";
 import Contact from "../../features/extras/Contact";
 import About from "../../features/extras/About";
+import AllOrders from "../../features/admin/AllOrders";
 
 export const router = createBrowserRouter([
     {
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
             //Admin Routes
             {element: <RequireAuth roles={['Admin']} />, children: [
                 {path: 'inventory', element: <Inventory/>},
+                {path: 'all-orders', element: <AllOrders />},
             ]},
 
             {path: '', element: <HomePage />},
