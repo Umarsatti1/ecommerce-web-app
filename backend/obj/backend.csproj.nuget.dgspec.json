@@ -54,6 +54,10 @@
               "target": "Package",
               "version": "[3.7.105.1, )"
             },
+            "AWSSDK.SQS": {
+              "target": "Package",
+              "version": "[3.7.400.59, )"
+            },
             "AWSSDK.SecretsManager": {
               "target": "Package",
               "version": "[3.7.400.59, )"

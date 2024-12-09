@@ -1,4 +1,6 @@
 using System.Text;
+using Amazon;
+using Amazon.S3.Model;
 using Amazon.S3;
 using backend.Data;
 using backend.Entities;

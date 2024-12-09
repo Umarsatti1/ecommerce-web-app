@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit"
 import { Cart } from "../../app/models/cart"
 
-import { getCookie } from "../../app/util/util";
+import { getCookie } from "../../app/models/util";
 import api from "../../app/api/api";
 
 interface CartState {

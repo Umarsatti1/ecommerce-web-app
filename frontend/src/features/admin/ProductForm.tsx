@@ -5,7 +5,7 @@ import AppSelectList from "../../app/components/AppSelectList";
 import AppDropzone from "../../app/components/AppDropzone";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "./productValidation";
-import agent from "../../app/api/api";
+import api from "../../app/api/api";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { setProduct } from "../catalog/catalogSlice";
 import useProducts from "../../app/hooks/useProducts";
@@ -42,9 +42,9 @@ export default function ProductForm({ product, cancelEdit }: Props) {
     try {
       let response: Product;
       if (product) {
-        response = await agent.Admin.updateProduct(data);
+        response = await api.Admin.updateProduct(data);
       } else {
-        response = await agent.Admin.createProduct(data);
+        response = await api.Admin.createProduct(data);
       }
       dispatch(setProduct(response));
       cancelEdit();

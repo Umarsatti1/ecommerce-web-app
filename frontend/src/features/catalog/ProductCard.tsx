@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Product } from '../../app/models/product';
 import { useAppDispatch, useAppSelector } from '../../app/store/configureStore';
 import { addCartItemAsync } from '../cart/cartSlice';
-import { currencyFormat } from '../../app/util/util';
+import { currencyFormat } from '../../app/models/util';
 import { ShoppingCart } from 'lucide-react';
 
 interface Props {

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import SignedInMenu from "./SignedInMenu";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import agent from '../api/api';
+import api from '../api/api';
 import { resetProductParams, fetchProductsAsync } from '../../features/catalog/catalogSlice';
 import LoadingComponent from './LoadingComponent';
 
@@ -30,7 +30,7 @@ export default function Header() {
   useEffect(() => {
     async function fetchBrands() {
       try {
-        const filters = await agent.Catalog.fetchFilters();
+        const filters = await api.Catalog.fetchFilters();
         setBrands(filters.brands);
       } catch (error) {
         console.error("Error fetching brands:", error);

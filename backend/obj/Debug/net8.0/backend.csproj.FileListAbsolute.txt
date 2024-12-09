@@ -522,3 +522,4 @@ C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-ap
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\AWSSDK.SecretsManager.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\DotNetEnv.dll
 C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\Sprache.dll
+C:\APU\Year3\Designing and Developing Applications on the Cloud\ecommerce-web-app\backend\bin\Debug\net8.0\AWSSDK.SQS.dll

@@ -5,7 +5,7 @@ import Review from "./Review";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { validationSchema } from "./checkoutValidation";
-import agent from "../../app/api/api";
+import api from "../../app/api/api";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { clearCart } from "../cart/cartSlice";
 import { CheckCircle, ChevronLeft, ChevronRight } from "lucide-react";
@@ -62,7 +62,7 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    agent.Account.fetchAddress().then((response) => {
+    api.Account.fetchAddress().then((response) => {
       if (response) {
         methods.reset({
           ...methods.getValues(),
@@ -87,7 +87,7 @@ export default function CheckoutPage() {
         },
       });
       if (paymentResult.paymentIntent?.status === "succeeded") {
-        const orderNumber = await agent.Orders.create({ saveAddress, shippingAddress });
+        const orderNumber = await api.Orders.create({ saveAddress, shippingAddress });
         setOrderNumber(orderNumber);
         setPaymentSucceeded(true);
         setPaymentMessage("Thank you. We have received your payment.");

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchCurrentUser, setUser } from "../../features/account/accountSlice";
-import agent from "../../app/api/api";
+import api from "../../app/api/api";
 
 interface ProfileFormValues {
   firstName: string;
@@ -55,7 +55,7 @@ const ProfileSettings = () => {
     }
 
     try {
-      await agent.Account.updateProfile(profile);
+      await api.Account.updateProfile(profile);
       setMessage({ text: "Profile updated successfully.", type: "success" });
       setProfile({ ...profile, Password: "", newPassword: "" });
       dispatch(setUser({ ...user, firstName: profile.firstName, lastName: profile.lastName }));

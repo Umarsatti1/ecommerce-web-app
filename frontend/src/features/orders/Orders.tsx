@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Order } from "../../app/models/order";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import OrderDetailed from "./OrderDetailed";
-import { currencyFormat } from "../../app/util/util";
+import { currencyFormat } from "../../app/models/util";
 import api from "../../app/api/api";
 
 export default function Orders() {
@@ -75,9 +75,9 @@ export default function Orders() {
                         ? "bg-green-100 text-green-800"
                         : order.orderStatus === "Pending"
                         ? "bg-yellow-100 text-yellow-800"
-                        : order.orderStatus === "Cancelled"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-blue-100 text-blue-800"
+                        : order.orderStatus === "Shipped"
+                        ? "bg-red-100 text-blue-800"
+                        : "bg-blue-100 text-red-800"
                     }`}
                   >
                     {order.orderStatus}

@@ -123,7 +123,7 @@ const Payments = {
     createPaymentIntent: () => requests.post('payments', {})
 };
 
-const agent = {
+const api = {
     Catalog,
     TestErrors,
     Cart,
@@ -133,4 +133,4 @@ const agent = {
     Admin
 };
 
-export default agent;
+export default api;

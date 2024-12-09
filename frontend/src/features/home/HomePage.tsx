@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, ArrowRightIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../catalog/ProductCard'
 import { Product } from '../../app/models/product'
-import agent from '../../app/api/api'
+import api from '../../app/api/api'
 import { Container } from '@mui/material'
 
 interface TimeLeft {
@@ -69,7 +69,7 @@ export default function HomePage() {
           orderBy: 'name' // or any default ordering you prefer
         })
         
-        const response = await agent.Catalog.list(params)
+        const response = await api.Catalog.list(params)
         // Randomly select 8 products from the response
         const shuffled = response.items.sort(() => 0.5 - Math.random())
         setProducts(shuffled.slice(0, 8))

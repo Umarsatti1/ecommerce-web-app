@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { User } from "../../app/models/user";
 import { FieldValues } from "react-hook-form";
-import agent from "../../app/api/api";
+import api from "../../app/api/api";
 import { router } from "../../app/router/Routes";
 import { toast } from "react-toastify";
 import { setCart } from "../cart/cartSlice";
@@ -19,7 +19,7 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
     'account/signInUser',
     async (data, thunkAPI) => {
         try {
-            const userDto = await agent.Account.login(data);
+            const userDto = await api.Account.login(data);
             const {cart, ...user} = userDto;
             if (cart) thunkAPI.dispatch(setCart(cart));
             localStorage.setItem('user', JSON.stringify(user));
@@ -35,7 +35,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
     async (_, thunkAPI) => {
         thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!)));
         try {
-            const userDto = await agent.Account.currentUser();
+            const userDto = await api.Account.currentUser();
             const {cart, ...user} = userDto;
             if (cart) thunkAPI.dispatch(setCart(cart));
             localStorage.setItem('user', JSON.stringify(user));

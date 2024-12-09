@@ -10,6 +10,7 @@
         "dependencies": {
           "AWSSDK.Extensions.NETCore.Setup": "3.7.301",
           "AWSSDK.S3": "3.7.105.1",
+          "AWSSDK.SQS": "3.7.400.59",
           "AWSSDK.SecretsManager": "3.7.400.59",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
           "CloudinaryDotNet": "1.26.2",
@@ -90,6 +91,17 @@
         },
         "runtime": {
           "lib/net8.0/AWSSDK.SecretsManager.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.400.59"
+          }
+        }
+      },
+      "AWSSDK.SQS/3.7.400.59": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.400.59"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.SQS.dll": {
             "assemblyVersion": "3.3.0.0",
             "fileVersion": "3.7.400.59"
           }
@@ -1947,6 +1959,13 @@
       "sha512": "sha512-HNpVriR9BqGEaSM4sObyX03QqOQifb2X/4syHF9Ij2wqID9eWK5IGlUry2+68rQLnL56JRf4UME09anvDS3YQw==",
       "path": "awssdk.secretsmanager/3.7.400.59",
       "hashPath": "awssdk.secretsmanager.3.7.400.59.nupkg.sha512"
+    },
+    "AWSSDK.SQS/3.7.400.59": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ikK75PXfbx8aTjAtm86hhOdMNrH7R+17XZDEV8GZcd9FI5rfVN6FLTGkQ/tEU/ylpB8bOBzZ5IC9UwQneDco9g==",
+      "path": "awssdk.sqs/3.7.400.59",
+      "hashPath": "awssdk.sqs.3.7.400.59.nupkg.sha512"
     },
     "Azure.Core/1.35.0": {
       "type": "package",

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bKtOHs8mGQs=",
+  "dgSpecHash": "Q5fl/FcgpBE=",
   "success": true,
   "projectFilePath": "C:\\APU\\Year3\\Designing and Developing Applications on the Cloud\\ecommerce-web-app\\backend\\backend.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\umars\\.nuget\\packages\\awssdk.extensions.netcore.setup\\3.7.301\\awssdk.extensions.netcore.setup.3.7.301.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\awssdk.s3\\3.7.105.1\\awssdk.s3.3.7.105.1.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\awssdk.secretsmanager\\3.7.400.59\\awssdk.secretsmanager.3.7.400.59.nupkg.sha512",
+    "C:\\Users\\umars\\.nuget\\packages\\awssdk.sqs\\3.7.400.59\\awssdk.sqs.3.7.400.59.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\umars\\.nuget\\packages\\cloudinarydotnet\\1.26.2\\cloudinarydotnet.1.26.2.nupkg.sha512",

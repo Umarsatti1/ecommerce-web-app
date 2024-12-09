@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../app/store/configureStore";
-import { currencyFormat } from "../../app/util/util";
+import { currencyFormat } from "../../app/models/util";
 
 interface Props {
   subtotal?: number;

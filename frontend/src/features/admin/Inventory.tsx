@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Product } from "../../app/models/product";
-import { currencyFormat } from "../../app/util/util";
+import { currencyFormat } from "../../app/models/util";
 import useProducts from "../../app/hooks/useProducts";
 import AppPagination from "../../app/components/AppPagination";
 import { useAppDispatch } from "../../app/store/configureStore";

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
-import agent from "../../app/api/api";
+import api from "../../app/api/api";
 import { FcGoogle } from "react-icons/fc";
 
 export default function Register() {
@@ -40,7 +40,7 @@ export default function Register() {
 
         <form
           onSubmit={handleSubmit((data) =>
-            agent.Account.register(data)
+            api.Account.register(data)
               .then(() => {
                 toast.success("Registration successful! You can now login");
                 navigate("/login");
