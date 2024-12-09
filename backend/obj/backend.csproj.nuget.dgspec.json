@@ -62,6 +62,10 @@
               "target": "Package",
               "version": "[3.7.400.59, )"
             },
+            "AWSSDK.SimpleNotificationService": {
+              "target": "Package",
+              "version": "[3.7.400.59, )"
+            },
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[12.0.1, )"
